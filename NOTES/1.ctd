@@ -1,0 +1,1309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cherrytree>
+  <bookmarks list="4"/>
+  <node name="PRISMA" unique_id="2" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734572758" ts_lastsave="1734574845">
+    <rich_text>
+ Generate Prisma client
+docker-compose run --rm backend npx prisma generate
+
+# Run migrations
+docker-compose run --rm backend npx prisma migrate dev --name init
+
+docker-compose exec backend npx prisma studio</rich_text>
+  </node>
+  <node name="admin creation" unique_id="3" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734572919" ts_lastsave="1735564941">
+    <rich_text>cd /devsec/msdevsec-blog/backend
+
+###generate hash
+docker-compose exec backend node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('Admin123456', 10).then(hash =&gt; console.log(hash));"
+
+$2a$10$LCUJZ1Wl1/9I5EuoXpIR/uSeN/J6jVB.Lw3tnHTFsPBk2sQhxMgfC
+
+##open prisma studio
+docker-compose exec backend npx prisma studio
+
+
+
+This will open Prisma Studio at http://localhost:5555 where you can:
+1. Click on "User" model
+2. Click "Add record"
+3. Fill in the fields:• email: your@email.com
+• firstName: MSDEVSEC
+• lastName: (leave empty)
+• password: (paste the hashed password from step 2)
+• role: "ADMIN"
+• isPremium: false
+• The createdAt and updatedAt fields will be auto-filled
+
+
+You can then verify the admin user by logging in through the API:
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'</rich_text>
+  </node>
+  <node name="USER CREATE API" unique_id="4" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734573351" ts_lastsave="1735568279">
+    <rich_text>ADMIN BLOCKED VIA API
+
+curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Test",
+    "lastName": "Admin",
+    "email": "admin@test.com",
+    "username": "testuser",
+    "password": "Admin123!",
+    "confirmPassword": "Admin123!",
+    "role": "ADMIN"
+  }'
+  
+You should see a response like:
+{
+  "message": "Registering admin accounts is not permitted through the API. Please contact MSDEVSEC support for assistance."
+}
+
+
+
+
+
+
+
+1. Test registering a normal user (this should work):
+
+curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "username": "testuser",
+    "password": "User123456",
+    "confirmPassword": "User123456",
+    "firstName": "Test",
+    "lastName": "User"
+  }'
+  
+  
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "User123456"
+  }'</rich_text>
+  </node>
+  <node name="POTS &amp; COMMENTS" unique_id="5" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734573816" ts_lastsave="1734573821">
+    <rich_text># Posts Management
+POST /api/posts - Create new post
+PUT /api/posts/:id - Update post
+DELETE /api/posts/:id - Delete post
+
+# Comments Management
+GET /api/comments/all - List all comments
+PUT /api/comments/:id - Update comment
+DELETE /api/comments/:id - Delete comment
+
+# Admin Dashboard
+GET /api/admin/dashboard - Get admin endpoints info
+Regular User Routes:
+
+# Posts (public)
+GET /api/posts - List published posts
+GET /api/posts/:identifier - Get single post
+
+# Comments (requires auth)
+POST /api/comments - Create comment on published post</rich_text>
+  </node>
+  <node name="POST &amp; COMMENTS API TEST" unique_id="6" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734573834" ts_lastsave="1735603725">
+    <rich_text>Let's test the admin functionality:
+1. Login as admin:
+
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'
+  
+1. Create a post (use the token from login response):
+2. 
+$ curl http://localhost:4000/api/posts/test-post {"id":"cm5b429gn0003xitvkj7ed846","title":"Test Post","content":"This is a test post content","published":true,"category":"CODE_TUTORIAL","slug":"test-post","excerpt":null,"authorId":"cm5b3p6zy0001y2kja3gwfars","createdAt":"2024-12-30T14:04:33.763Z","updatedAt":"2024-12-30T14:04:33.763Z","author":{"id":"cm5b3p6zy0001y2kja3gwfars","firstName":"Admin","lastName":"Administrator","email":"admin@msdevsec.com"},"comments":[]}
+
+</rich_text>
+    <rich_text family="monospace">curl -X POST http://localhost:4000/api/posts/admin \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWJvb2VyNjAwMDBsN25ia3ptZWZreDciLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoiTVNERVZTRUMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOnRydWUsImlhdCI6MTczNTYwMzU4MSwiZXhwIjoxNzM1Njg5OTgxfQ.Gfg9WZJSljgllzN9kFLLcDRRjboxKUvbe9MAxCEzicg" \
+  -d '{
+    "title": "HackTheBox Lame Walkthrough",
+    "content": "&lt;h2&gt;Introduction&lt;/h2&gt;&lt;p&gt;In this walkthrough, we will explore how to exploit the Lame machine from HackTheBox.&lt;/p&gt;&lt;h2&gt;Initial Recon&lt;/h2&gt;&lt;p&gt;First, we start with an nmap scan to identify open ports and services...&lt;/p&gt;",
+    "category": "PENTESTING",
+    "excerpt": "A detailed walkthrough of the HackTheBox Lame machine, covering initial recon, exploitation, and privilege escalation.",
+    "published": true
+  }'</rich_text>
+    <rich_text>
+  
+1. Test regular user comment creation:
+
+# First register a regular user
+curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "Test",
+    "lastName": "User",
+    “username": "coal1",
+    "email": "user@test.com",
+    "password": "User123!",
+    "confirmPassword": "User123!"
+  }'
+  
+  2.
+  
+  You can then verify the admin user by logging in through the API:
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@test.com",
+    "password": "User123!"
+  }'  
+
+
+  
+
+# Then create a comment using the user token
+curl -X POST http://localhost:4000/api/comments \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbTR1bzY0eWEwMDAwYmwybHdueHZvaDd4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzQ1NzQzMjAsImV4cCI6MTczNDY2MDcyMH0.dZf4OHsPnjWHCn6zlRaRxYOuKV0_peCHvsIiQS8F-xo" \
+  -d '{
+    "postId": "</rich_text>
+    <rich_text background="#616161" foreground="#f8f8f8">cm4uoo9pa0001j5wxwzizzyib</rich_text>
+    <rich_text>",
+    "content": "Great tutorial!"
+  }'</rich_text>
+  </node>
+  <node name="FILTERING" unique_id="7" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734574404" ts_lastsave="1734585299">
+    <rich_text>1. Get all posts:
+
+
+
+1. Get the specific post by ID:
+curl </rich_text>
+    <rich_text link="webs http://localhost:4000/api/posts/cm4uoo9pa0001j5wxwzizzyib">http://localhost:4000/api/posts/cm4uoo9pa0001j5wxwzizzyib</rich_text>
+    <rich_text>
+
+
+1. Update the post (using admin token):
+
+curl -X PUT http://localhost:4000/api/posts/cm4uoo9pa0001j5wxwzizzyib \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbTR1bzY0eWEwMDAwYmwybHdueHZvaDd4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzQ1NzQzMjAsImV4cCI6MTczNDY2MDcyMH0.dZf4OHsPnjWHCn6zlRaRxYOuKV0_peCHvsIiQS8F-xo" \
+  -d '{
+    "title": "Updated Tutorial Title",
+    "content": "This is the updated content of the tutorial",
+    "excerpt": "A brief overview of the tutorial"
+  }'
+  
+  
+  
+  1. View all comments as admin:
+  
+ curl http://localhost:4000/api/comments/all \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbTR1bzY0eWEwMDAwYmwybHdueHZvaDd4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzQ1NzQzMjAsImV4cCI6MTczNDY2MDcyMH0.dZf4OHsPnjWHCn6zlRaRxYOuKV0_peCHvsIiQS8F-xo"</rich_text>
+  </node>
+  <node name="VISIBILITY" unique_id="8" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734574702" ts_lastsave="1735572317">
+    <rich_text>admin only:
+
+</rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe"># </rich_text>
+    <rich_text family="monospace">To make a post visible (published=</rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">true</rich_text>
+    <rich_text family="monospace">):
+curl -X PUT "http://localhost:4000/api/posts/cm4us21go00019ciryca6uqry" -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNHVyeDkyczAwMDB0NXIwdWhybWcybzIiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzQ1Nzk4NDMsImV4cCI6MTczNDY2NjI0M30.8VfPWgRhErQxdvywf52P0PnAPM7M9MUSXCN1b0IerNI" -d '{
+  "published": true
+}'
+
+</rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">
+# </rich_text>
+    <rich_text family="monospace">To make a post invisible (published=</rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">false</rich_text>
+    <rich_text family="monospace">):
+curl -X PUT "http://localhost:4000/api/posts/cm5b6et5p0003wpdc33h39e5o " -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNHVyeDkyczAwMDB0NXIwdWhybWcybzIiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzQ1Nzk4NDMsImV4cCI6MTczNDY2NjI0M30.8VfPWgRhErQxdvywf52P0PnAPM7M9MUSXCN1b0IerNI" -d '{
+  "published": false
+}'</rich_text>
+    <rich_text>
+
+
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNHVzNzFiYzAwMDQ5Y2lycGJmdHozeDQiLCJlbWFpbCI6InVzZXJAdGVzdC5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzQ1ODAxMDMsImV4cCI6MTczNDY2NjUwM30.BG2JHi-tfH5uLmbelOzsQ0uVFRXeX88fGl_IVeA_qvw
+
+</rich_text>
+  </node>
+  <node name="DELETE FUNCTIONALITY" unique_id="9" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734575164" ts_lastsave="1734580422">
+    <rich_text>c</rich_text>
+    <rich_text family="monospace">url http://localhost:4000/api/posts \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbTR1bzhzM2wwMDAwdTZkZWc0dWNvdWVvIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0NTczNDkzLCJleHAiOjE3MzQ2NTk4OTN9.GHjTqvVkQ7OvbWcfFISe2jfG1NTlexh_ZTS2tWvs_UM"
+  
+</rich_text>
+    <rich_text>1. Then delete a post using its ID:
+</rich_text>
+    <rich_text family="monospace">curl -X DELETE http://localhost:4000/api/posts/cm4us2v6m00039cir92xd5r5z \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNHVyeDkyczAwMDB0NXIwdWhybWcybzIiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzQ1ODAzNTEsImV4cCI6MTczNDY2Njc1MX0.dnTOJHLIX99pq1fs5OCC7oFinKTeLOmG00lp5a2kHEE"
+  
+</rich_text>
+    <rich_text>1. Verify the post is deleted by trying to fetch it:
+</rich_text>
+    <rich_text family="monospace">curl http://localhost:4000/api/posts/cm4uoxsxh0005j5wxnh9hj1es \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbTR1bzhzM2wwMDAwdTZkZWc0dWNvdWVvIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM0NTczNDkzLCJleHAiOjE3MzQ2NTk4OTN9.GHjTqvVkQ7OvbWcfFISe2jfG1NTlexh_ZTS2tWvs_UM"</rich_text>
+  </node>
+  <node name="frontend" unique_id="10" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734576276" ts_lastsave="1734579774">
+    <rich_text family="monospace">npm install @chakra-ui/react @emotion/react @emotion/styled framer-motion styled-components react-icons</rich_text>
+    <rich_text>
+
+</rich_text>
+  </node>
+  <node name="CODE_TUTORIALS &amp; PENTESTING WALKTRHOUGHTS" unique_id="11" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1734579774" ts_lastsave="1735564047">
+    <rich_text>###create code_tutorial
+
+
+curl -X POST http://localhost:4000/api/posts -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNHVzNzFiYzAwMDQ5Y2lycGJmdHozeDQiLCJlbWFpbCI6InVzZXJAdGVzdC5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzQ1ODAxMDMsImV4cCI6MTczNDY2NjUwM30.BG2JHi-tfH5uLmbelOzsQ0uVFRXeX88fGl_IVeA_qvw" -d '{
+  "title": "Getting Started with TypeScript",
+  "content": "TypeScript is a powerful superset of JavaScript that adds static typing...",
+  "category": "CODE_TUTORIAL",
+  "published": true,
+  "excerpt": "Learn the basics of TypeScript and how to set up your first project",
+  "slug": "getting-started-with-typescript"
+}'
+
+
+
+###create pentesting tutorial
+
+curl -X POST http://localhost:4000/api/posts -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNHVzNzFiYzAwMDQ5Y2lycGJmdHozeDQiLCJlbWFpbCI6InVzZXJAdGVzdC5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzQ1ODAxMDMsImV4cCI6MTczNDY2NjUwM30.BG2JHi-tfH5uLmbelOzsQ0uVFRXeX88fGl_IVeA_qvw" -d '{
+  "title": "Introduction to Web Application Security",
+  "content": "Understanding the basics of web security and common vulnerabilities...",
+  "category": "PENTESTING",
+  "published": true,
+  "excerpt": "Learn about web security fundamentals and how to identify vulnerabilities",
+  "slug": "intro-to-web-app-security"
+}'
+
+
+##FETCH CODE TUTORIALS CATEGORIES
+curl -X GET "http://localhost:4000/api/posts?category=CODE_TUTORIAL" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNHVyeDkyczAwMDB0NXIwdWhybWcybzIiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzQ1Nzk4NDMsImV4cCI6MTczNDY2NjI0M30.8VfPWgRhErQxdvywf52P0PnAPM7M9MUSXCN1b0IerNI"
+
+
+##FETCH PENTESTING TUTORIALS
+curl -X GET "http://localhost:4000/api/posts?category=CODE_TUTORIAL" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNHVyeDkyczAwMDB0NXIwdWhybWcybzIiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzQ1Nzk4NDMsImV4cCI6MTczNDY2NjI0M30.8VfPWgRhErQxdvywf52P0PnAPM7M9MUSXCN1b0IerNI"
+</rich_text>
+  </node>
+  <node name="everytime i start docker = containers wiped" unique_id="12" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735564047" ts_lastsave="1735564415">
+    <rich_text>MSSPIDER MINGW64 /h/PROGRAMMING/DEVSEC/msdevsec-blog/backend
+$ docker-compose exec backend npx prisma migrate deploy
+time="2024-12-30T13:04:04Z" level=warning msg="H:\\PROGRAMMING\\DEVSEC\\msdevsec-blog\\backend\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "msdevsec_blog", schema "public" at "db:5432"
+
+3 migrations found in prisma/migrations</rich_text>
+  </node>
+  <node name="how the github will work" unique_id="13" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735564415" ts_lastsave="1735564901">
+    <rich_text>t</rich_text>
+    <rich_text foreground="#89d185">he system will automatically:</rich_text>
+    <rich_text>
+• Set up the database
+• Create a demo admin account
+• Load the example articles into the database
+• Start the frontend and backend servers
+
+1. They'll immediately see:
+◇ Working blog with example tutorials and pentesting articles
+◇ Ability to log in with demo admin account
+◇ Full functionality of comments, premium content, etc.
+
+1. If they want to use it for their own blog:
+◇ Clear the database (just delete the Docker volume)
+◇ Remove the example articles from </rich_text>
+    <rich_text family="monospace">backend/prisma/seed/articles/</rich_text>
+    <rich_text>
+◇ Add their own content through the admin panel
+◇ Update the admin credentials
+
+</rich_text>
+    <rich_text foreground="#89d185">This way, users get an instant demo to understand how everything works, but can easily convert it to their own blog when ready.</rich_text>
+    <rich_text>
+</rich_text>
+    <rich_text foreground="#89d185">For your premium version:</rich_text>
+    <rich_text>
+◇ Remove all example content
+◇ Add persistent database storage
+◇ Keep your real content private in a separate repository
+
+</rich_text>
+  </node>
+  <node name="DB PERSISTENT VS TEMP" unique_id="14" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735564901" ts_lastsave="1735569655">
+    <rich_text>Let me explain Docker volumes and database backups in more detail.
+
+
+
+
+
+
+</rich_text>
+    <rich_text weight="heavy">Task Completed</rich_text>
+    <rich_text>
+Yes, exactly! Here's how it works:
+1. Docker Volume:
+• It's a special directory on your VPS at </rich_text>
+    <rich_text family="monospace">/var/lib/docker/volumes/</rich_text>
+    <rich_text>
+• When you define </rich_text>
+    <rich_text family="monospace">postgres_data:/var/lib/postgresql/data</rich_text>
+    <rich_text> in docker-compose:◇ Docker creates a volume named </rich_text>
+    <rich_text family="monospace">postgres_data</rich_text>
+    <rich_text>
+◇ Maps it to PostgreSQL's data directory inside the container
+◇ All database files are stored there persistently
+
+
+
+1. Data Flow:
+</rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">Your</rich_text>
+    <rich_text family="monospace"> </rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">Blog</rich_text>
+    <rich_text family="monospace"> -&gt; </rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">PostgreSQL</rich_text>
+    <rich_text family="monospace"> </rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">Container</rich_text>
+    <rich_text family="monospace"> -&gt; </rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">Docker</rich_text>
+    <rich_text family="monospace"> </rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">Volume</rich_text>
+    <rich_text family="monospace"> -&gt; </rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">VPS</rich_text>
+    <rich_text family="monospace"> </rich_text>
+    <rich_text family="monospace" foreground="#9cdcfe">Filesystem</rich_text>
+    <rich_text family="monospace">
+                                                     (/var/lib/docker/volumes/postgres_data)
+</rich_text>
+    <rich_text>1. Backup Strategies:
+◇ Regular database dumps:</rich_text>
+    <rich_text family="monospace"># Backup
+docker </rich_text>
+    <rich_text family="monospace" foreground="#dcdcaa">exec</rich_text>
+    <rich_text family="monospace"> postgres pg_dump -U postgres msdevsec &gt; backup.sql
+
+# Restore if needed
+docker </rich_text>
+    <rich_text family="monospace" foreground="#dcdcaa">exec</rich_text>
+    <rich_text family="monospace"> -i postgres psql -U postgres msdevsec &lt; backup.sql
+</rich_text>
+    <rich_text>
+◇ Volume backups:</rich_text>
+    <rich_text family="monospace"># Backup the entire volume
+tar -czvf backup.tar.gz /var/lib/docker/volumes/postgres_data
+</rich_text>
+    <rich_text>
+◇ Automated backups using cron jobs
+◇ Upload backups to secure storage (AWS S3, etc.)
+
+Even if you:
+◇ Restart Docker
+◇ Update containers
+◇ Reboot VPS
+
+The data stays safe in the volume. But you should still maintain backups in case:
+◇ VPS hardware fails
+◇ Volume gets corrupted
+◇ Need to migrate to different server
+
+
+
+
+
+
+
+</rich_text>
+  </node>
+  <node name="START THE APP (HOLY WAY)" unique_id="17" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735569655" ts_lastsave="1735602146">
+    <rich_text> 1. Stop all containers
+cd msdevsec-blog/backend
+docker-compose down
+
+# 2. Remove the database volume
+docker volume rm msdevsec-blog_postgres_data
+
+# 3. Generate Prisma client and apply migrations
+docker-compose up -d db
+# Wait 10 seconds for database to be ready
+docker-compose up -d
+docker-compose exec backend npx prisma generate
+docker-compose exec backend npx prisma migrate reset --force
+
+# 4. Restart the backend container to pick up new Prisma client
+docker-compose restart backend
+
+# 5. Create admin user
+docker-compose exec backend npx ts-node scripts/create-admin.ts
+
+# 6. Test admin login
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'
+  
+  
+  cd backend
+  docker compose up
+  
+  cd frontend
+  docker compose up
+  
+  docker-compose exec backend npx prisma studio</rich_text>
+  </node>
+  <node name="NORMAL USER TESTING:" unique_id="15" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735568311" ts_lastsave="1735568521">
+    <rich_text>CREATE USER:
+</rich_text>
+    <rich_text family="monospace">curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "User123456"
+  }'</rich_text>
+    <rich_text>
+  
+  
+  LOGIN AS USER:
+  </rich_text>
+    <rich_text family="monospace">curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "User123456"
+  }'</rich_text>
+    <rich_text>
+  
+  
+  TRY TO CREATE POST (SHOULD BE DENIED) 
+  </rich_text>
+    <rich_text family="monospace">curl -X PUT http://localhost:4000/api/posts/any-post-id \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE" \
+  -d '{
+    "title": "Updated Title"
+  }'</rich_text>
+    <rich_text>
+  
+  
+  TRY TO UPDATE POST (SHOULD BE DENIED)
+  </rich_text>
+    <rich_text family="monospace">curl -X PUT http://localhost:4000/api/posts/any-post-id \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE" \
+  -d '{
+    "title": "Updated Title"
+  }'</rich_text>
+    <rich_text>
+  
+  
+  
+  GET ALL POSTS (SHOULD WORK ONLY FOR PUBLISHED POSTS)
+  
+  </rich_text>
+    <rich_text family="monospace">curl http://localhost:4000/api/posts \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE"</rich_text>
+    <rich_text>
+  
+  
+  GET SINGLE POST (SHOULD WORK FOR PUBLISHED ONLY)
+  
+  </rich_text>
+    <rich_text family="monospace">curl http://localhost:4000/api/posts/test-post \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE"</rich_text>
+  </node>
+  <node name="ADMIN USER TESTING:" unique_id="16" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735568521" ts_lastsave="1735572366">
+    <rich_text>LOGIN:
+
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'
+
+
+CREATE NEW POST:
+
+curl -X POST http://localhost:4000/api/posts \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjY4NzIsImV4cCI6MTczNTY1MzI3Mn0.EIB9LOBaoN5LGNXqt0UR_iM0NH3dPKEImyyiei7IlAE" \
+  -d '{
+    "title": "HackTheBox Lame Walkthrough",
+    "content": "&lt;h2&gt;Introduction&lt;/h2&gt;&lt;p&gt;In this walkthrough, we will explore how to exploit the Lame machine from HackTheBox.&lt;/p&gt;",
+    "category": "PENTESTING",
+    "excerpt": "A detailed walkthrough of the HackTheBox Lame machine",
+    "published": true
+  }'
+  
+  
+  GET ALL POSTS (PUBLISHED AND NOT PUBLISHED)
+  
+curl http://localhost:4000/api/posts/all \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjY4NzIsImV4cCI6MTczNTY1MzI3Mn0.EIB9LOBaoN5LGNXqt0UR_iM0NH3dPKEImyyiei7IlAE"
+  
+  GET POSTS BY CATEGORY
+  
+  curl "http://localhost:4000/api/posts?category=PENTESTING" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjY4NzIsImV4cCI6MTczNTY1MzI3Mn0.EIB9LOBaoN5LGNXqt0UR_iM0NH3dPKEImyyiei7IlAE"
+  
+  GET SINGLE POST
+  
+  curl http://localhost:4000/api/posts/cm5b6et5p0003wpdc33h39e5o \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjY4NzIsImV4cCI6MTczNTY1MzI3Mn0.EIB9LOBaoN5LGNXqt0UR_iM0NH3dPKEImyyiei7IlAE"
+  
+PUBLISH / UNPUBLISH
+
+curl -X  PUT </rich_text>
+    <rich_text link="webs http://localhost:4000/api/posts/admin/cm5b6et5p0003wpdc33h39e5o/toggle">http://localhost:4000/api/posts/admin/cm5b6et5p0003wpdc33h39e5o/toggle</rich_text>
+    <rich_text> \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjY4NzIsImV4cCI6MTczNTY1MzI3Mn0.EIB9LOBaoN5LGNXqt0UR_iM0NH3dPKEImyyiei7IlAE"
+  
+  
+POST ID: cm5b6bs3j0001wpdckakq4069
+
+create / DELETE POST:
+
+crreate:
+
+curl -X POST http://localhost:4000/api/posts \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjY4NzIsImV4cCI6MTczNTY1MzI3Mn0.EIB9LOBaoN5LGNXqt0UR_iM0NH3dPKEImyyiei7IlAE" \
+  -d '{
+    "title": "Building Secure APIs with Node.js and Express",
+    "content": "&lt;h2&gt;Introduction&lt;/h2&gt;&lt;p&gt;Security is crucial when building APIs. In this tutorial, we will learn best practices for creating secure REST APIs using Node.js and Express.&lt;/p&gt;&lt;h2&gt;Key Security Measures&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;Input Validation&lt;/li&gt;&lt;li&gt;Authentication &amp; Authorization&lt;/li&gt;&lt;li&gt;Rate Limiting&lt;/li&gt;&lt;li&gt;CORS Configuration&lt;/li&gt;&lt;li&gt;Security Headers&lt;/li&gt;&lt;/ul&gt;&lt;h2&gt;Implementation&lt;/h2&gt;&lt;p&gt;First, let'\''s set up a basic Express server with security middleware...&lt;/p&gt;&lt;h2&gt;Best Practices&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;Always validate user input&lt;/li&gt;&lt;li&gt;Use HTTPS in production&lt;/li&gt;&lt;li&gt;Implement proper error handling&lt;/li&gt;&lt;li&gt;Keep dependencies updated&lt;/li&gt;&lt;/ul&gt;&lt;h2&gt;Conclusion&lt;/h2&gt;&lt;p&gt;Following these security practices will help protect your API from common vulnerabilities.&lt;/p&gt;",
+    "category": "CODE_TUTORIAL",
+    "excerpt": "Learn how to build secure REST APIs using Node.js and Express with industry best practices",
+    "published": true
+  }'
+  
+  
+  delete the same post:
+
+curl -X DELETE http://localhost:4000/api/posts/cm5b6bs3j0001wpdckakq4069 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjY4NzIsImV4cCI6MTczNTY1MzI3Mn0.EIB9LOBaoN5LGNXqt0UR_iM0NH3dPKEImyyiei7IlAE"
+  
+  
+</rich_text>
+  </node>
+  <node name="left to do" unique_id="18" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735570161" ts_lastsave="1735594528">
+    <rich_text weight="heavy">Task Completed</rich_text>
+    <rich_text>
+Features needed for the free GitHub version:
+1. Comments System (To Implement):
+• Allow authenticated users to add comments to posts
+• Allow users to edit/delete their own comments
+• Admin can moderate all comments
+• Comment validation (length, content, etc.)
+
+
+• User Authentication (Already Done):
+◇ Registration ✓
+◇ Login ✓
+◇ JWT token handling ✓
+◇ Role-based access (ADMIN/USER) ✓
+
+
+• Post Management (Already Done):
+◇ CRUD operations for posts ✓
+◇ Post visibility toggle ✓
+◇ Categories (CODE_TUTORIAL, PENTESTING) ✓
+◇ Public/Admin access levels ✓
+
+
+• Core Security (To Implement):
+◇ Basic rate limiting for API endpoints
+◇ Input sanitization
+◇ Basic XSS protection
+
+
+• Static Pages (To Implement):
+◇ Premium features information page
+◇ About page
+◇ Contact page
+◇ Terms of service
+◇ Privacy policy
+
+
+• Basic User Features (To Implement):
+◇ Logout functionality (frontend only, as JWT is handled client-side)
+◇ Basic user profile page
+◇ Change password functionality
+◇ View user's own comments
+
+
+• Basic Search (To Implement):
+◇ Simple category filtering
+◇ Basic search by title
+◇ Simple pagination
+
+
+• Documentation (To Implement):
+◇ README with setup instructions
+◇ API endpoints documentation
+◇ Environment variables documentation
+◇ Development guide
+
+
+Would you like to start with implementing the comments system? It's one of the core features that will allow user interaction with the blog posts.
+
+
+
+
+</rich_text>
+  </node>
+  <node name="comments API admin test" unique_id="19" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735594528" ts_lastsave="1735596551">
+    <rich_text>//public get particular comment
+
+curl -X GET http://localhost:4000/api/comments/cm5bl4ux10001l39uuq8p2vrl \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc"
+
+
+
+
+You can then verify the admin user by logging in through the API:
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'
+
+
+all posts admin:
+
+curl -X GET http://localhost:4000/api/posts/admin/all \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTQ0NjYsImV4cCI6MTczNTY4MDg2Nn0.qsFPcFVLPYYcMsEDrKJigBLTIPtTI-CrS3yEvDimPGk"
+  
+  
+  
+  
+  curl -X POST http://localhost:4000/api/comments \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTQ0NjYsImV4cCI6MTczNTY4MDg2Nn0.qsFPcFVLPYYcMsEDrKJigBLTIPtTI-CrS3yEvDimPGk" \
+  -d '{
+    "content": "This is an admin comment 1",
+    "postId": "cm5b6et5p0003wpdc33h39e5o"
+  }'
+  
+  
+  
+  update comment:
+  
+  curl -X PUT http://localhost:4000/api/comments/cm5bl4ux10001l39uuq8p2vrl \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc" \
+  -d '{
+    "content": "DAMN"
+  }'
+  
+  
+  # Delete any comment (admin can delete any)
+curl -X DELETE http://localhost:4000/api/comments/cm5bl1iif0003yd6kpo27bcxz \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc"
+  
+  
+  
+  
+  1. Public Routes (No Auth Required):
+# List published posts
+curl http://localhost:4000/api/posts
+
+# Get single post with comments
+curl http://localhost:4000/api/posts/cm5b6et5p0003wpdc33h39e5o</rich_text>
+  </node>
+  <node name="comments API user test" unique_id="20" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735594966" ts_lastsave="1735603860">
+    <rich_text>  
+  curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "username": "testuser",
+    "password": "User123456",
+    "confirmPassword": "User123456",
+    "firstName": "Test",
+    "lastName": "User"
+  }'
+  
+  
+  LOGIN AS USER:
+  </rich_text>
+    <rich_text family="monospace">curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "User123456"
+  }'</rich_text>
+    <rich_text>
+  
+
+
+GET PARTICULAR COMMENT
+
+curl -X GET http://localhost:4000/api/comments/cm5bl4ux10001l39uuq8p2vrl \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc"
+
+
+1. Posts (These should fail for regular users):
+# Try to list all posts (should fail - admin only)
+curl -X GET http://localhost:4000/api/posts/admin/all \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE"
+
+# Try to create post (should fail - admin only)
+curl -X POST http://localhost:4000/api/posts/admin/create \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE" \
+  -d '{
+    "title": "Test Post",
+    "content": "Test content",
+    "category": "PENTESTING",
+    "published": true
+  }'
+  
+  # Create comment
+curl -X POST http://localhost:4000/api/comments \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWJwb3R2ajAwMDN0cWlhb29ybDh2NTMiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU2MDM4NTUsImV4cCI6MTczNTY5MDI1NX0.fhczbiiRenLNVn292Msa7kX3BSkie3wTWBgs0rE_gGU" \
+  -d '{
+    "content": "TEST1",
+    "postId": "cm5bpncu00002tqia2ism2ngn"
+  }'
+
+# Update own comment (will not work as users can only delete)
+curl -X PUT http://localhost:4000/api/comments/cm5bl4ux10001l39uuq8p2vrl \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE" \
+  -d '{
+    "content": "Updated comment from regular user"
+  }'
+
+# Try to update someone else's comment (should fail)
+curl -X PUT http://localhost:4000/api/comments/cm5bk7n8t0001q8arkdl3lsxr \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE" \
+  -d '{
+    "content": "Trying to update someone else's comment"
+  }'
+
+# Delete own comment (should work)
+curl -X DELETE http://localhost:4000/api/comments/cm5bkldz70007q8arljvcnylt \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE"
+
+# Try to delete someone else's comment (should fail)
+curl -X DELETE http://localhost:4000/api/comments/cm5bk7n8t0001q8arkdl3lsxr \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWI0ajZxZTAwMDJzNDI2b2w5cWs5dGYiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicm9sZSI6IlVTRVIiLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1NjgyODAsImV4cCI6MTczNTY1NDY4MH0.lDTeGNdGlJSONsgtEGBieQnFGdWNrDvVBfGgiMSr-tE"</rich_text>
+  </node>
+  <node name="find comment by ID" unique_id="21" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735596212" ts_lastsave="1735596665">
+    <rich_text>1. View all comments (admin only):
+
+
+
+curl -X GET http://localhost:4000/api/comments/all \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc"
+
+curl -X GET http://localhost:4000/api/comments/cm5bl4ux10001l39uuq8p2vrl \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc"
+
+
+
+  
+  
+  1. View comments for a specific post (public):
+
+# Get post by ID
+curl http://localhost:4000/api/posts/
+
+# Or get post by slug
+curl http://localhost:4000/api/posts/your-post-slug
+
+
+
+  
+  </rich_text>
+  </node>
+  <node name="POSTS API (admin only)" unique_id="22" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735596665" ts_lastsave="1735596743">
+    <rich_text>(admin only)
+
+# Get all posts (including unpublished)
+curl -X GET http://localhost:4000/api/posts/admin/all \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc"
+
+# Create new post
+curl -X POST http://localhost:4000/api/posts/admin/create \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc" \
+  -d '{
+    "title": "Test Post",
+    "content": "Test content",
+    "category": "PENTESTING",
+    "excerpt": "Test excerpt",
+    "published": true
+  }'
+
+# Toggle post visibility
+curl -X PUT http://localhost:4000/api/posts/admin/POST_ID/toggle \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc"
+
+# Update post
+curl -X PUT http://localhost:4000/api/posts/admin/POST_ID \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc" \
+  -d '{
+    "title": "Updated Title",
+    "content": "Updated content"
+  }'
+
+# Delete post
+curl -X DELETE http://localhost:4000/api/posts/admin/POST_ID \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNWIzcDZ6eTAwMDF5MmtqYTNnd2ZhcnMiLCJlbWFpbCI6ImFkbWluQG1zZGV2c2VjLmNvbSIsInVzZXJuYW1lIjoibXNkZXZzZWMiLCJyb2xlIjoiQURNSU4iLCJpc1ByZW1pdW0iOmZhbHNlLCJpYXQiOjE3MzU1OTU5MzEsImV4cCI6MTczNTY4MjMzMX0.RKxn3BdEwqxUSqXpdhWIlvsmuXp1rgT1_hJEP3yjqpc"</rich_text>
+  </node>
+  <node name="how this app works" unique_id="23" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735596743" ts_lastsave="1735596936">
+    <rich_text>
+
+ADMIN CAN CREATE POSTS , UPDATE POSTS, DELETE POSTS, TOGGLE PUBLISHED/UNPUBLISHED POSTS SO USERS CANT SEE UNPUBLISHED POSTS
+
+ADMIN CAN CREATE,UPDATE,DELETE ALL COMMENTS
+
+USERS CAN CREATE COMMENTS ON EXISTING POSTS , THEY CAN ONLY DELETE THEIR OWN COMMENTS , NO OTHER FUNCTIONALITY
+
+
+
+
+
+
+
+</rich_text>
+    <rich_text foreground="#89d185">Yes, the backend is complete with the following functionality:</rich_text>
+    <rich_text>
+1. Posts (Blog Content):
+• Public can:◇ View list of published posts
+◇ View individual published posts by ID or slug
+◇ Cannot see unpublished posts
+
+
+• Admin can:◇ Create new posts
+◇ Update any post
+◇ Delete any post
+◇ Toggle post visibility (published/unpublished)
+◇ View all posts (including unpublished)
+
+
+
+
+• Comments:
+◇ Public (not logged in):▪ Can only view comments
+▪ Cannot create, edit, or delete comments
+
+
+◇ Regular Users can:▪ Create comments on published posts
+▪ Delete their own comments only
+▪ Cannot edit any comments (including their own)
+▪ Cannot delete others' comments
+
+
+◇ Admin can:▪ Create comments
+▪ Edit any comment
+▪ Delete any comment
+▪ View all comments
+
+
+
+
+• Authentication:
+◇ Public routes (no auth needed):▪ View published posts
+▪ View comments
+
+
+◇ Protected routes (login required):▪ Create comments
+▪ Delete own comments
+
+
+◇ Admin routes (admin token required):▪ All post management
+▪ All comment management
+
+
+
+
+</rich_text>
+    <rich_text foreground="#89d185">The permissions are properly enforced through:</rich_text>
+    <rich_text>
+1. Route middleware (requireAuth, requireAdmin)
+2. Controller-level checks (authorId === userId || isAdmin)
+3. Data access controls (published: true for public posts)
+</rich_text>
+    <rich_text foreground="#89d185">Would you like me to provide test commands for any specific functionality?</rich_text>
+    <rich_text>
+</rich_text>
+  </node>
+  <node name="logout explained" unique_id="24" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735596936" ts_lastsave="1735597109">
+    <rich_text>I see that we don't have a logout endpoint in the auth routes. However, since we're using JWT tokens, logout is typically handled on the frontend by:
+1. Removing the token from local storage
+2. Updating the auth context state
+The backend doesn't need a logout endpoint because:
+1. JWTs are stateless
+2. The token remains valid until it expires
+3. We're not using a token blacklist/revocation system
+Let me summarize the complete API functionality.
+
+
+
+
+
+
+Task Completed
+The API is complete with the following endpoints:
+1. Authentication:
+# Register
+POST /api/auth/register
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "username": "username",
+  "firstName": "First",
+  "lastName": "Last"
+}
+
+# Login
+POST /api/auth/login
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+
+# Logout is handled on frontend by removing the JWT token
+1. Posts:
+# Public
+GET /api/posts                # List published posts
+GET /api/posts/:identifier    # Get single post (by ID or slug)
+
+# Admin only
+GET /api/posts/admin/all      # List all posts (including unpublished)
+POST /api/posts/admin/create  # Create post
+PUT /api/posts/admin/:id      # Update post
+DELETE /api/posts/admin/:id   # Delete post
+PUT /api/posts/admin/:id/toggle # Toggle post visibility
+1. Comments:
+# Public
+GET /api/comments/:id         # View single comment
+
+# Requires auth
+POST /api/comments           # Create comment
+DELETE /api/comments/:id     # Delete own comment
+
+# Admin only
+GET /api/comments/all        # List all comments
+PUT /api/comments/:id        # Update any comment
+The API is complete for your requirements:
+1. Full post management for admins
+2. Comment functionality for users
+3. Public access to published content
+4. JWT-based authentication
+5. Proper permission controls at both route and controller levels
+No additional endpoints are needed since:
+1. Logout is handled client-side
+2. All CRUD operations for posts and comments are covered
+3. Authentication and authorization are properly implemented
+Would you like to test any specific endpoint?
+
+
+
+
+
+
+
+Yes, for the GitHub version, the current implementation is sufficient. Let me summarize what we have and what we could add in the official application.
+
+
+
+
+
+
+</rich_text>
+    <rich_text weight="heavy">Task Completed</rich_text>
+    <rich_text>
+Current Implementation (GitHub Version) ✅:
+1. Simple JWT-based auth with 24-hour expiration
+2. Frontend-handled logout by removing token
+3. Complete API functionality for:• Posts (admin CRUD + public view)
+• Comments (user create/delete + admin full control)
+• Basic authentication (register/login)
+
+
+Future Improvements for Official Application 🚀:
+1. Advanced Authentication:
+◇ Refresh tokens
+◇ Token blacklisting
+◇ Device tracking
+◇ Logout from all devices
+◇ Session management
+
+
+• Additional Security:
+◇ Rate limiting
+◇ IP blocking
+◇ 2FA support
+◇ Password reset flow
+◇ Email verification
+
+
+• User Management:
+◇ User profiles
+◇ Role management
+◇ Premium user features
+◇ Activity tracking
+
+
+The current implementation is perfect for GitHub as it:
+1. Shows the core functionality
+2. Is easy to understand and maintain
+3. Follows common patterns
+4. Has proper separation of concerns
+5. Implements necessary security measures
+Would you like to start working on the frontend components now?
+
+
+
+
+
+
+</rich_text>
+  </node>
+  <node name="progress" unique_id="25" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735597109" ts_lastsave="1735597603">
+    <rich_text>Let me check what we have and what's left to do.
+Completed:
+1. Backend API:• Authentication (login/register)
+• Posts CRUD with admin controls
+• Comments with user/admin permissions
+• All necessary routes and controllers
+• Database setup with Prisma
+• Docker configuration
+
+
+Left to do:
+1. Frontend:
+◇ Static pages (Home, About, etc.)
+◇ Blog post display
+◇ Admin dashboard
+◇ Comment system UI
+◇ Authentication forms
+◇ Navigation and layout
+◇ Styling and responsiveness
+
+
+• Integration:
+◇ Connect frontend with backend API
+◇ Handle authentication state
+◇ Implement data fetching
+◇ Error handling
+◇ Loading states
+
+
+
+
+
+
+
+
+</rich_text>
+    <rich_text weight="heavy">Task Completed</rich_text>
+    <rich_text>
+Yes, you're correct. The backend is complete and working properly. What's left is:
+1. Frontend Development:
+◇ Complete the React components
+◇ Implement the UI/UX design
+◇ Set up routing
+◇ Create admin interface
+◇ Build comment system UI
+
+
+• Static Pages:
+◇ Home page
+◇ About page
+◇ Contact page
+◇ Blog listing pages
+◇ Individual blog post pages
+◇ Admin dashboard pages
+
+
+You can proceed with providing instructions for the frontend implementation.
+
+
+
+
+
+
+</rich_text>
+  </node>
+  <node name="dashbaord test" unique_id="26" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735597603" ts_lastsave="1735598739">
+    <rich_text>1. Regular User Testing:
+</rich_text>
+    <rich_text family="monospace"># Login as regular user
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123"
+  }'
+
+# Visit http://localhost:5173/dashboard
+# You should see:
+- Free member badge
+- Free account features section
+- Upgrade to premium button
+- Basic features list
+</rich_text>
+    <rich_text>1. Admin Testing:
+</rich_text>
+    <rich_text family="monospace"># Login as admin
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'
+
+# Visit http://localhost:5173/dashboard
+# You should see:
+- Admin user badge
+- Content management section
+- Admin controls
+- Quick actions for managing content
+</rich_text>
+    <rich_text>1. Premium User Testing:
+</rich_text>
+    <rich_text family="monospace"># Login as premium user
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "premium@example.com",
+    "password": "password123"
+  }'
+
+# Visit http://localhost:5173/dashboard
+# You should see:
+- Premium member badge
+- Premium features
+- No upgrade section</rich_text>
+  </node>
+  <node name="db when start" unique_id="27" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735598739" ts_lastsave="1735600122">
+    <rich_text>
+First Time Setup / After Pulling Changes:
+
+
+
+# 1. Start database first
+cd msdevsec-blog/backend
+docker-compose up -d db
+# Wait 10 seconds for database to be ready
+
+# 2. Start backend and apply migrations
+docker-compose up -d
+docker-compose exec backend npx prisma migrate reset --force
+
+
+docker-compose run --rm backend npx prisma generate
+docker-compose exec backend npx prisma studio
+
+
+
+docker-compose exec backend npx ts-node scripts/create-admin.ts
+docker-compose exec backend npx ts-node scripts/create-test-posts.ts
+
+
+# 3. Start frontend
+cd ../frontend
+docker-compose up -d
+
+
+
+
+Regular Daily Startup:
+
+cd msdevsec-blog/backend
+docker-compose up -d
+cd ../frontend
+docker-compose up -d
+
+
+If Something Breaks:
+# 1. Stop everything
+cd msdevsec-blog/backend
+docker-compose down
+cd ../frontend
+docker-compose down
+
+# 2. Start fresh (follow First Time Setup steps above)
+
+
+
+
+# Test admin login
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'
+
+# Test user registration
+curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "Password123",
+    "confirmPassword": "Password123",
+    "username": "testuser",
+    "firstName": "Test",
+    "lastName": "User"
+  }'</rich_text>
+  </node>
+  <node name="after changes" unique_id="28" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1735600122" ts_lastsave="1735601464">
+    <rich_text> 1. Stop all containers
+cd msdevsec-blog/backend
+docker-compose down
+
+# 2. Remove the database volume
+docker volume rm msdevsec-blog_postgres_data
+
+# 3. Generate Prisma client and apply migrations
+docker-compose up -d db
+# Wait 10 seconds for database to be ready
+docker-compose up -d
+docker-compose exec backend npx prisma generate
+docker-compose exec backend npx prisma migrate reset --force
+
+# 4. Restart the backend container to pick up new Prisma client
+docker-compose restart backend
+
+# 5. Create admin user
+docker-compose exec backend npx ts-node scripts/create-admin.ts
+
+# 6. Test admin login
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'
+  
+  
+  cd backend
+  docker compose up
+  
+  cd frontend
+  docker compose up
+  
+  docker-compose exec backend npx prisma studio</rich_text>
+  </node>
+</cherrytree>
