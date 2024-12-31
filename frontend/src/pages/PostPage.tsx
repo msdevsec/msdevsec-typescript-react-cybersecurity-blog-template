@@ -358,10 +358,23 @@ export const PostPage: React.FC = () => {
         throw new Error(data.message || 'Failed to post comment');
       }
 
-      setPost(prev => prev ? {
-        ...prev,
-        comments: [...prev.comments, data.comment],
-      } : null);
+      // Add the new comment to the post's comments array
+      setPost(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          comments: [
+            ...prev.comments,
+            {
+              ...data.comment,
+              author: {
+                id: data.comment.author.id,
+                username: data.comment.author.username
+              }
+            }
+          ]
+        };
+      });
       setCommentText('');
       setCommentError(null);
     } catch (err) {
