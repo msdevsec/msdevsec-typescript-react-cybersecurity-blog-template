@@ -65,6 +65,10 @@ const Card = styled(Link)`
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 250px;
 
   &::before {
     content: '';
@@ -104,14 +108,20 @@ const CardExcerpt = styled.p`
   margin-bottom: 1rem;
 `;
 
+const CardContent = styled.div`
+  flex: 1;
+`;
+
 const CardMeta = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   font-family: 'Roboto Mono', monospace;
   color: #0F0;
   font-size: 0.8rem;
   opacity: 0.6;
+  margin-top: auto;
+  padding-top: 1rem;
 `;
 
 const CategoryTag = styled.span`
@@ -171,10 +181,12 @@ const LatestTutorials: React.FC = () => {
         <Grid>
           {tutorials.map((tutorial) => (
             <Card key={tutorial.id} to={`/tutorials/${tutorial.slug}`}>
-              <CardTitle>{tutorial.title}</CardTitle>
-              <CardExcerpt>
-                {tutorial.excerpt || 'Click to read this tutorial...'}
-              </CardExcerpt>
+              <CardContent>
+                <CardTitle>{tutorial.title}</CardTitle>
+                <CardExcerpt>
+                  {tutorial.excerpt || 'Click to read this tutorial...'}
+                </CardExcerpt>
+              </CardContent>
               <CardMeta>
                 <CategoryTag>CODE TUTORIAL</CategoryTag>
                 <MetaInfo>
