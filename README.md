@@ -14,16 +14,45 @@ A modern, secure blog platform built with TypeScript, React, and Node.js. Featur
 
 ## Quick Start
 
-1. Clone the repository:
+### 1. Clone and Setup
 ```bash
-git clone https://github.com/msdevsec/msdevsec-blog.git
-cd msdevsec-blog
+# Clone the repository
+git clone https://github.com/msdevsec/msdevsec-typescript-react-cybersecurity-blog-template.git
+cd msdevsec-typescript-react-cybersecurity-blog-template
+
+# Set up environment files
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
 
-2. Start the services:
+### 2. Start Backend Services
 ```bash
-docker-compose up -d
+# Terminal 1: Start backend containers
+cd backend
+docker-compose up
 ```
+
+```bash
+# Terminal 2: Initialize database
+cd backend
+docker-compose exec backend npx prisma generate
+docker-compose exec backend npx prisma migrate deploy
+
+# Optional: View database with Prisma Studio
+docker-compose exec backend npx prisma studio
+```
+
+### 3. Start Frontend Services
+```bash
+# Terminal 3: Start frontend
+cd frontend
+docker-compose up
+```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:4000
+- Prisma Studio: http://localhost:5555 (if launched)
 
 ## Admin Account Creation
 
@@ -108,3 +137,59 @@ See [Backend README](backend/README.md) for detailed API documentation and devel
 ## License
 
 MIT
+
+
+# MSDEVSEC Blog
+
+A modern, secure blog platform built with TypeScript, React, and Node.js. Features a robust backend with role-based access control, secure admin management, and a clean API design. Includes Docker containerization for easy development and deployment.
+
+## Security Features
+- JWT-based authentication
+- Role-based access control (USER/ADMIN)
+- Password hashing with bcrypt
+- Input validation and sanitization
+- Protected admin routes
+- Secure admin creation (database-only)
+- Request rate limiting (TODO for production)
+
+## Quick Start
+
+### 1. Clone and Setup
+```bash
+# Clone the repository
+git clone https://github.com/msdevsec/msdevsec-typescript-react-cybersecurity-blog-template.git
+cd msdevsec-typescript-react-cybersecurity-blog-template
+
+# Set up environment files
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
+
+### 2. Start Backend Services
+```bash
+# Terminal 1: Start backend containers
+cd backend
+docker-compose up
+```
+
+```bash
+# Terminal 2: Initialize database
+cd backend
+docker-compose exec backend npx prisma generate
+docker-compose exec backend npx prisma migrate deploy
+
+# Optional: View database with Prisma Studio
+docker-compose exec backend npx prisma studio
+```
+
+### 3. Start Frontend Services
+```bash
+# Terminal 3: Start frontend
+cd frontend
+docker-compose up
+```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:4000
+- Prisma Studio: http://localhost:5555 (if launched)
