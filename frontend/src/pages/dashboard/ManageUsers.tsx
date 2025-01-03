@@ -112,6 +112,7 @@ const UserHeader = styled.div<{ expanded?: boolean }>`
 
 const UserInfo = styled.div`
   flex: 1;
+  margin-left: 2rem;
 `;
 
 const Username = styled.h3`
@@ -167,6 +168,97 @@ const ActionButton = styled.button`
   svg {
     width: 1.2rem;
     height: 1.2rem;
+  }
+`;
+
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const UpgradeButton = styled(ActionButton)`
+  color: #9F00FF;
+
+  &:hover {
+    text-shadow: 0 0 5px rgba(159, 0, 255, 0.5);
+  }
+`;
+
+const DowngradeButton = styled(ActionButton)`
+  color: #FFA500;
+
+  &:hover {
+    text-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
+  }
+`;
+
+const Controls = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+`;
+
+const Checkbox = styled.input`
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  accent-color: #9F00FF;
+`;
+
+const SelectAllButton = styled.button`
+  background: transparent;
+  border: none;
+  color: #0F0;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+  }
+`;
+
+const BulkActionButton = styled.button`
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #FF0000;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: #FF0000;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+  }
+`;
+
+const BulkUpgradeButton = styled(BulkActionButton)`
+  background: rgba(159, 0, 255, 0.1);
+  border-color: #9F00FF;
+  color: #9F00FF;
+
+  &:hover {
+    background: rgba(159, 0, 255, 0.2);
+    box-shadow: 0 0 10px rgba(159, 0, 255, 0.3);
+  }
+`;
+
+const BulkDowngradeButton = styled(BulkActionButton)`
+  background: rgba(255, 165, 0, 0.1);
+  border-color: #FFA500;
+  color: #FFA500;
+
+  &:hover {
+    background: rgba(255, 165, 0, 0.2);
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
   }
 `;
 
@@ -233,6 +325,26 @@ const ErrorMessage = styled.div`
   padding: 2rem;
 `;
 
+const SuccessMessage = styled.div`
+  color: #0F0;
+  background: rgba(0, 255, 0, 0.1);
+  border: 1px solid #0F0;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  font-family: 'Roboto Mono', monospace;
+  animation: fadeOut 3s forwards;
+  
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+`;
+
 export const ManageUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -241,6 +353,9 @@ export const ManageUsers: React.FC = () => {
   const [expandedUser, setExpandedUser] = useState<string | null>(null);
   const [userComments, setUserComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [processingUsers, setProcessingUsers] = useState<Set<string>>(new Set());
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -252,12 +367,12 @@ export const ManageUsers: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-      const response = await fetch('http://localhost:4000/api/users', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json'
-        }
-      });
+        const response = await fetch('http://localhost:4000/api/users', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
@@ -303,6 +418,217 @@ export const ManageUsers: React.FC = () => {
     }
   };
 
+  const handleSelectAll = () => {
+    if (selectedUsers.size === filteredUsers.length) {
+      setSelectedUsers(new Set());
+    } else {
+      setSelectedUsers(new Set(filteredUsers.map(user => user.id)));
+    }
+  };
+
+  const handleSelectUser = (userId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newSelected = new Set(selectedUsers);
+    if (newSelected.has(userId)) {
+      newSelected.delete(userId);
+    } else {
+      newSelected.add(userId);
+    }
+    setSelectedUsers(newSelected);
+  };
+
+  const handleUpgradeUser = async (userId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (processingUsers.has(userId)) return;
+    
+    // First update the UI optimistically
+    const userToUpdate = users.find(u => u.id === userId);
+    if (!userToUpdate) return;
+
+    setProcessingUsers(prev => new Set([...prev, userId]));
+    setUsers(prevUsers => 
+      prevUsers.map(user => 
+        user.id === userId ? { ...user, isPremium: true } : user
+      )
+    );
+    
+    try {
+      const response = await fetch(`http://localhost:4000/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          isPremium: true
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upgrade user');
+      }
+
+      const updatedUser = await response.json();
+      setSuccessMessage('User upgraded successfully');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (error) {
+      // Revert the optimistic update on error
+      setUsers(prevUsers => 
+        prevUsers.map(user => 
+          user.id === userId ? { ...user, isPremium: false } : user
+        )
+      );
+      console.error('Error upgrading user:', error);
+      alert('Failed to upgrade user');
+    } finally {
+      setProcessingUsers(prev => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
+  };
+
+  const handleDowngradeUser = async (userId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (processingUsers.has(userId)) return;
+    
+    // First update the UI optimistically
+    const userToUpdate = users.find(u => u.id === userId);
+    if (!userToUpdate) return;
+
+    setProcessingUsers(prev => new Set([...prev, userId]));
+    setUsers(prevUsers => 
+      prevUsers.map(user => 
+        user.id === userId ? { ...user, isPremium: false } : user
+      )
+    );
+    
+    try {
+      const response = await fetch(`http://localhost:4000/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          isPremium: false
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to downgrade user');
+      }
+
+      const updatedUser = await response.json();
+      setSuccessMessage('User downgraded successfully');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (error) {
+      // Revert the optimistic update on error
+      setUsers(prevUsers => 
+        prevUsers.map(user => 
+          user.id === userId ? { ...user, isPremium: true } : user
+        )
+      );
+      console.error('Error downgrading user:', error);
+      alert('Failed to downgrade user');
+    } finally {
+      setProcessingUsers(prev => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
+  };
+
+  const handleUpgradeSelected = async () => {
+    if (!window.confirm(`Are you sure you want to upgrade ${selectedUsers.size} selected users to premium?`)) {
+      return;
+    }
+
+    try {
+      const responses = await Promise.all(
+        Array.from(selectedUsers).map(userId =>
+          fetch(`http://localhost:4000/api/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              isPremium: true
+            })
+          }).then(res => res.json())
+        )
+      );
+
+      setUsers(prevUsers => {
+        const updatedUsers = [...prevUsers];
+        responses.forEach(updatedUser => {
+          const index = updatedUsers.findIndex(u => u.id === updatedUser.id);
+          if (index !== -1) {
+            updatedUsers[index] = updatedUser;
+          }
+        });
+        return updatedUsers;
+      });
+
+      const count = selectedUsers.size;
+      setSelectedUsers(new Set());
+      setSuccessMessage(`${count} users upgraded successfully`);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (error) {
+      console.error('Error upgrading users:', error);
+      alert('Failed to upgrade some users');
+    }
+  };
+
+  const handleDowngradeSelected = async () => {
+    if (!window.confirm(`Are you sure you want to downgrade ${selectedUsers.size} selected users from premium?`)) {
+      return;
+    }
+
+    try {
+      const responses = await Promise.all(
+        Array.from(selectedUsers).map(userId =>
+          fetch(`http://localhost:4000/api/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              isPremium: false
+            })
+          }).then(res => res.json())
+        )
+      );
+
+      setUsers(prevUsers => {
+        const updatedUsers = [...prevUsers];
+        responses.forEach(updatedUser => {
+          const index = updatedUsers.findIndex(u => u.id === updatedUser.id);
+          if (index !== -1) {
+            updatedUsers[index] = updatedUser;
+          }
+        });
+        return updatedUsers;
+      });
+
+      const count = selectedUsers.size;
+      setSelectedUsers(new Set());
+      setSuccessMessage(`${count} users downgraded successfully`);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (error) {
+      console.error('Error downgrading users:', error);
+      alert('Failed to downgrade some users');
+    }
+  };
+
   const handleDeleteUser = async (userId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     
@@ -328,9 +654,41 @@ export const ManageUsers: React.FC = () => {
         setExpandedUser(null);
         setUserComments([]);
       }
+      setSelectedUsers(prev => {
+        const newSelected = new Set(prev);
+        newSelected.delete(userId);
+        return newSelected;
+      });
     } catch (error) {
       console.error('Error deleting user:', error);
       alert('Failed to delete user');
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    if (!window.confirm(`Are you sure you want to delete ${selectedUsers.size} selected users? This action cannot be undone.`)) {
+      return;
+    }
+
+    const deletePromises = Array.from(selectedUsers).map(userId =>
+      fetch(`http://localhost:4000/api/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
+      })
+    );
+
+    try {
+      await Promise.all(deletePromises);
+      setUsers(users.filter(user => !selectedUsers.has(user.id)));
+      setSelectedUsers(new Set());
+      setExpandedUser(null);
+      setUserComments([]);
+    } catch (error) {
+      console.error('Error deleting users:', error);
+      alert('Failed to delete some users');
     }
   };
 
@@ -349,6 +707,7 @@ export const ManageUsers: React.FC = () => {
 
   return (
     <Container>
+      {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
       <GoBackButton onClick={() => navigate('/dashboard')}>Go Back</GoBackButton>
       <Title>Manage Users</Title>
       <SearchBar
@@ -357,11 +716,40 @@ export const ManageUsers: React.FC = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+      <Controls>
+        <SelectAllButton onClick={handleSelectAll}>
+          <Checkbox
+            type="checkbox"
+            checked={selectedUsers.size === filteredUsers.length && filteredUsers.length > 0}
+            readOnly
+          />
+          Select All
+        </SelectAllButton>
+        {selectedUsers.size > 0 && (
+          <>
+            <BulkUpgradeButton onClick={handleUpgradeSelected}>
+              Upgrade Selected ({selectedUsers.size})
+            </BulkUpgradeButton>
+            <BulkDowngradeButton onClick={handleDowngradeSelected}>
+              Downgrade Selected ({selectedUsers.size})
+            </BulkDowngradeButton>
+            <BulkActionButton onClick={handleDeleteSelected}>
+              Delete Selected ({selectedUsers.size})
+            </BulkActionButton>
+          </>
+        )}
+      </Controls>
       <UserList>
         {filteredUsers.map((user) => (
-          <UserCard key={user.id} onClick={() => handleUserClick(user.id)}>
+          <UserCard key={user.id}>
             <UserHeader expanded={expandedUser === user.id}>
-              <UserInfo>
+              <Checkbox
+                type="checkbox"
+                checked={selectedUsers.has(user.id)}
+                onChange={(e) => handleSelectUser(user.id, e as any)}
+                onClick={(e) => e.stopPropagation()}
+              />
+              <UserInfo onClick={() => handleUserClick(user.id)}>
                 <Username>
                   {user.username}
                   {user.role === 'ADMIN' && <Badge type="admin">Admin</Badge>}
@@ -374,14 +762,47 @@ export const ManageUsers: React.FC = () => {
                   <span>Joined {new Date(user.createdAt).toLocaleDateString()}</span>
                 </Stats>
               </UserInfo>
-              <ActionButton
-                onClick={(e) => handleDeleteUser(user.id, e)}
-                title="Delete user"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </ActionButton>
+              <ActionButtons>
+                {!user.isPremium ? (
+                  <UpgradeButton
+                    onClick={(e) => handleUpgradeUser(user.id, e)}
+                    title="Upgrade to Premium"
+                    disabled={processingUsers.has(user.id)}
+                    style={{ opacity: processingUsers.has(user.id) ? 0.5 : 1 }}
+                  >
+                    {processingUsers.has(user.id) ? (
+                      "Processing..."
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                    )}
+                  </UpgradeButton>
+                ) : (
+                  <DowngradeButton
+                    onClick={(e) => handleDowngradeUser(user.id, e)}
+                    title="Downgrade from Premium"
+                    disabled={processingUsers.has(user.id)}
+                    style={{ opacity: processingUsers.has(user.id) ? 0.5 : 1 }}
+                  >
+                    {processingUsers.has(user.id) ? (
+                      "Processing..."
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                      </svg>
+                    )}
+                  </DowngradeButton>
+                )}
+                <ActionButton
+                  onClick={(e) => handleDeleteUser(user.id, e)}
+                  title="Delete user"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </ActionButton>
+              </ActionButtons>
             </UserHeader>
             {expandedUser === user.id && (
               <CommentSection>
