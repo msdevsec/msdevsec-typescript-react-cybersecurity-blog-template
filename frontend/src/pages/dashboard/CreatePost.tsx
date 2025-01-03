@@ -328,7 +328,7 @@ export const CreatePost: React.FC = () => {
             body: formData
           });
 
-          if (!response.ok) throw new Error('Failed to upload file');
+          if (!response.ok) throw new Error('Your post title, content and description must be at least 3 characters long.');
           
           const data = await response.json();
           setUploadedFiles(prev => [...prev, { name: file.name, url: data.url }]);
@@ -368,7 +368,7 @@ export const CreatePost: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create post');
+        throw new Error('your Post Title, content and description must be at least 3 characters long.');
       }
 
       // Navigate to drafts page if saving as draft, otherwise go to dashboard
@@ -378,7 +378,7 @@ export const CreatePost: React.FC = () => {
         navigate('/dashboard');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create post');
+      setError(err instanceof Error ? err.message : 'Your Post Title, content and description must be at least 3 characters long');
     } finally {
       setLoading(false);
     }

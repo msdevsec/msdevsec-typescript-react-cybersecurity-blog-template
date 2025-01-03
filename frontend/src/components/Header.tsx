@@ -61,7 +61,8 @@ const YouTubeLink = styled.a`
   color: #bf00ff;
   display: inline-flex;
   align-items: center;
-  margin-left: 0.5rem;
+  margin-left: 0.rem;
+  margin-bottom: -0.1rem;
   transition: all 0.3s ease;
   
   &:hover {
@@ -70,8 +71,8 @@ const YouTubeLink = styled.a`
   }
 
   svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24x;
   }
 `;
 
