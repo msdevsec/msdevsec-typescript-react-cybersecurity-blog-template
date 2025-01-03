@@ -156,7 +156,17 @@ For pricing, customization options, and access to the complete commercial source
 
 ## 📚 API Documentation
 
+Complete API reference with example usage. Set your tokens as environment variables:
+
+# Admin token
+ADMIN_TOKEN="insert your admin token here"
+
+# User token
+USER_TOKEN="insert your user token here"
+
 ### Authentication
+
+
 
 ```bash
 # Register a new user (always registers as normal user)
