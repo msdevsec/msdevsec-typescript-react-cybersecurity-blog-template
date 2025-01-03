@@ -335,8 +335,6 @@ curl -X POST http://localhost:4000/api/posts/admin \
 - Access to premium content endpoints
 - Priority API support
 
-## 🌟 Live Demo & Commercial Version
-
 ### 💼 Get the Commercial Version
 For pricing, customization options, and access to the complete commercial source code with all premium features, contact us at (https://msdevsec.com) or [admin@msdevsec.com](mailto:admin@msdevsec.com). </br>
 
