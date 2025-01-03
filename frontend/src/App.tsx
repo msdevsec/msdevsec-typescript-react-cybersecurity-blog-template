@@ -15,6 +15,7 @@ import LatestTutorials from './components/LatestTutorials';
 import LatestPentesting from './components/LatestPentesting';
 import PremiumSection from './components/PremiumSection';
 import { default as PremiumPage } from './pages/premium';
+import { default as CommunityPage } from './pages/community';
 import { CreatePost } from './pages/dashboard/CreatePost';
 import { EditPost } from './pages/dashboard/EditPost';
 import { DraftsPage } from './pages/dashboard/DraftsPage';
@@ -45,6 +46,7 @@ const App: React.FC = () => {
           <Route path="/tutorials/:slug" element={<PostPage />} />
           <Route path="/pentesting/:slug" element={<PostPage />} />
           <Route path="/premium" element={<PremiumPage />} />
+          <Route path="/community" element={<CommunityPage />} />
           <Route 
             path="/dashboard" 
             element={

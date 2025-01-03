@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 const FooterContainer = styled.footer`
   background: rgba(0, 10, 0, 0.95);
   border-top: 1px solid #0F0;
-  padding: 4rem 2rem;
-  margin-top: 5rem;
+  padding: 2rem;
+  margin-top: 1rem;
   position: relative;
   overflow: hidden;
 
@@ -35,7 +35,7 @@ const FooterContent = styled.div`
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
@@ -47,14 +47,14 @@ const GridContainer = styled.div`
 `;
 
 const Section = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 `;
 
 const SectionTitle = styled.h3`
   color: #0F0;
   font-family: 'Orbitron', sans-serif;
   font-size: 1.25rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 `;
 
@@ -65,7 +65,7 @@ const LinkList = styled.ul`
 `;
 
 const LinkItem = styled.li`
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 `;
 
 const FooterLink = styled(Link)`
@@ -123,8 +123,8 @@ const AboutText = styled.p`
 
 const Copyright = styled.div`
   text-align: center;
-  margin-top: 4rem;
-  padding-top: 2rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
   border-top: 1px solid rgba(0, 255, 0, 0.2);
   color: rgba(0, 255, 0, 0.6);
   font-family: 'Roboto Mono', monospace;
