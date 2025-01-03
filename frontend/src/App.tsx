@@ -18,6 +18,10 @@ import { default as PremiumPage } from './pages/premium';
 import { default as CommunityPage } from './pages/community';
 import { default as RSSPage } from './pages/rss';
 import { default as SitemapPage } from './pages/sitemap';
+import { default as DocsPage } from './pages/docs';
+import { default as PrivacyPage } from './pages/privacy';
+import { default as TermsPage } from './pages/terms';
+import { default as ContactPage } from './pages/contact';
 import { CreatePost } from './pages/dashboard/CreatePost';
 import { EditPost } from './pages/dashboard/EditPost';
 import { DraftsPage } from './pages/dashboard/DraftsPage';
@@ -51,6 +55,10 @@ const App: React.FC = () => {
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/rss" element={<RSSPage />} />
           <Route path="/sitemap" element={<SitemapPage />} />
+          <Route path="/docs" element={<DocsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route 
             path="/dashboard" 
             element={
