@@ -332,46 +332,11 @@ curl -X POST http://localhost:4000/api/posts/admin \
 }
 ```
 
-### API Rate Limits
-
-- Free users: 60 requests/hour
-- Premium users: 1000 requests/hour
-
 ### Premium API Benefits
 
-- Increased rate limits
 - Access to premium content endpoints
 - Priority API support
 
-## 🤝 Contributing
-
-### Guidelines
-- Content must be original and not published elsewhere
-- Follow our markdown formatting guidelines
-- Include practical examples and code snippets
-- Properly cite sources and references
-
-### Markdown Example
-
-```markdown
-# Tutorial Title
-
-## Introduction
-Brief overview of the topic.
-
-### Prerequisites
-- Required knowledge
-- Required tools
-
-```python
-def example_code():
-    print("Hello, World!")
-```
-
-## Step-by-Step Guide
-1. First step
-2. Second step
-```
 
 ## 🌐 Community Resources
 
