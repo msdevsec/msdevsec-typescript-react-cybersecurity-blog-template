@@ -50,6 +50,7 @@ docker-compose up
 cd backend
 docker-compose exec backend npx prisma generate
 docker-compose exec backend npx prisma migrate deploy
+docker-compose restart backend
 
 # Optional: View database with Prisma Studio
 docker-compose exec backend npx prisma studio
@@ -66,6 +67,46 @@ The application will be available at:
 - 🌐 Frontend: http://localhost:3000
 - 🔌 Backend API: http://localhost:4000
 - 🗄️ Prisma Studio: http://localhost:5555 (if launched)
+
+## Admin Account Creation
+
+For security reasons, admin account creation is **disabled through the API**. Instead, follow these steps to create an admin account:
+
+1. Generate a password hash:
+```bash
+docker-compose exec backend node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('YOUR_ADMIN_PASSWORD', 10).then(hash => console.log(hash));"
+
+# Example:
+docker-compose exec backend node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('Admin123456', 10).then(hash => console.log(hash));"
+# Output: $2a$10$2G6IgUGEXfFyGX6.ENbxQ.wuP2ceG2fOliU0BeDgrA9hgKeajGqlq
+```
+
+2. Open Prisma Studio:
+```bash
+docker-compose exec backend npx prisma studio
+```
+
+3. Create admin user in Prisma Studio (http://localhost:5555):
+   - Click on "User" model
+   - Click "Add record"
+   - Fill in the fields:
+     * email: admin@msdevsec.com
+     * firstName: MSDEVSEC
+     * lastName: (leave empty)
+     * password: (paste the hashed password from step 1)
+     * role: "ADMIN"
+     * isPremium: false
+     * createdAt and updatedAt will be auto-filled
+
+4. Verify admin login:
+```bash
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@msdevsec.com",
+    "password": "Admin123456"
+  }'
+```
 
 ## ✨ Features
 
