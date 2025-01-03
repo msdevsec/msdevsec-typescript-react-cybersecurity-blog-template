@@ -24,6 +24,26 @@ const Container = styled.div`
   padding: 6rem 2rem 2rem 2rem;
 `;
 
+const GoBackButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  background: rgba(159, 0, 255, 0.1);
+  border: 1px solid #9F00FF;
+  border-radius: 4px;
+  color: #9F00FF;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 120px;
+  margin-bottom: 1rem;
+
+  &:hover {
+    background: rgba(159, 0, 255, 0.2);
+    box-shadow: 0 0 10px rgba(159, 0, 255, 0.3);
+    transform: translateY(-2px);
+  }
+`;
+
 const EditorCard = styled.div`
   background: rgba(13, 13, 13, 0.8);
   border: 1px solid rgba(128, 0, 255, 0.3);
@@ -371,6 +391,7 @@ export const EditPost: React.FC = () => {
 
   return (
     <Container>
+      <GoBackButton onClick={() => navigate('/dashboard')}>Go Back</GoBackButton>
       <EditorCard>
         <Title>Edit Post</Title>
 

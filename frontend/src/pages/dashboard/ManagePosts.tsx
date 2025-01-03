@@ -14,6 +14,32 @@ interface Post {
 type SortField = 'title' | 'createdAt' | 'category';
 type SortOrder = 'asc' | 'desc';
 
+const Container = styled.div`
+  padding: 8rem 2rem 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const GoBackButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  background: rgba(159, 0, 255, 0.1);
+  border: 1px solid #9F00FF;
+  border-radius: 4px;
+  color: #9F00FF;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 120px;
+  margin-bottom: 1rem;
+
+  &:hover {
+    background: rgba(159, 0, 255, 0.2);
+    box-shadow: 0 0 10px rgba(159, 0, 255, 0.3);
+    transform: translateY(-2px);
+  }
+`;
+
 const SortButton = styled.button<{ active: boolean; order?: SortOrder }>`
   background: transparent;
   border: none;
@@ -39,12 +65,6 @@ const SortControls = styled.div`
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
-`;
-
-const Container = styled.div`
-  padding: 8rem 2rem 2rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
 `;
 
 const HeaderSection = styled.div`
@@ -367,6 +387,7 @@ const ManagePosts: React.FC = () => {
 
   return (
     <Container>
+      <GoBackButton onClick={() => navigate('/dashboard')}>Go Back</GoBackButton>
       <HeaderSection>
         <Title>Manage Published Posts</Title>
         <CreateButton onClick={() => navigate('/dashboard/posts/new')}>
