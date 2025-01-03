@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
+import GoBackButton from '../components/shared/GoBackButton';
 
 interface Comment {
   id: string;
@@ -354,6 +355,12 @@ const AdminControls = styled.div`
   background: rgba(159, 0, 255, 0.05);
   border: 1px solid rgba(159, 0, 255, 0.2);
   border-radius: 8px;
+  justify-content: space-between;
+`;
+
+const AdminButtons = styled.div`
+  display: flex;
+  gap: 1rem;
 `;
 
 const AdminButton = styled.button`
@@ -580,19 +587,22 @@ export const PostPage: React.FC = () => {
 
   return (
     <Container>
-      {isAdmin && (
-        <AdminControls>
-          <AdminButton onClick={handleEdit}>
-            Edit
-          </AdminButton>
-          <HideButton onClick={handleHide}>
-            Hide
-          </HideButton>
-          <DeletePostButton onClick={handleDelete}>
-            Delete
-          </DeletePostButton>
-        </AdminControls>
-      )}
+      <AdminControls>
+        <GoBackButton />
+        {isAdmin && (
+          <AdminButtons>
+            <AdminButton onClick={handleEdit}>
+              Edit
+            </AdminButton>
+            <HideButton onClick={handleHide}>
+              Hide
+            </HideButton>
+            <DeletePostButton onClick={handleDelete}>
+              Delete
+            </DeletePostButton>
+          </AdminButtons>
+        )}
+      </AdminControls>
 
       <PostHeader>
         <Title>{post.title}</Title>

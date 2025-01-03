@@ -276,120 +276,157 @@ def example_code():
         <Section>
           <SectionTitle>API Documentation</SectionTitle>
           <Description>
-            Access our API to integrate msdevsec content into your applications.
+            Complete API reference with example usage. Set your tokens as environment variables:
           </Description>
+
+          <CodeBlock>
+{`# Admin token
+ADMIN_TOKEN="insert your admin token here"
+
+# User token
+USER_TOKEN="insert your user token here"`}
+          </CodeBlock>
 
           <SubTitle>Authentication</SubTitle>
           <CodeBlock>
-{`# Request an API token
-POST /api/auth/token
-Content-Type: application/json
-
-{
-  "email": "your@email.com",
-  "password": "your_password"
-}`}
-          </CodeBlock>
-
-          <SubTitle>Authentication Endpoints</SubTitle>
-          <CodeBlock>
-{`# Register a new user
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "secure_password",
-  "username": "username"
-}
-
-# Login and get JWT token
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "secure_password"
-}
-
-# Response
-{
-  "token": "jwt_token_here",
-  "user": {
-    "id": "user_id",
+{`# Register a new user (always registers as normal user)
+curl -X POST http://localhost:4000/api/auth/register \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "firstName": "Test",
+    "lastName": "User",
     "email": "user@example.com",
-    "username": "username",
-    "role": "user"
-  }
-}`}
+    "username": "testuser",
+    "password": "User123456",
+    "confirmPassword": "User123456"
+  }'
+
+# Login
+curl -X POST http://localhost:4000/api/auth/login \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "email": "user@example.com",
+    "password": "User123456"
+  }'`}
           </CodeBlock>
 
-          <SubTitle>Content Endpoints</SubTitle>
-          <List>
-            <ListItem>
-              GET /api/posts - List all public posts
-            </ListItem>
-            <ListItem>
-              GET /api/posts/:id - Get specific post
-            </ListItem>
-            <ListItem>
-              GET /api/posts/tutorials - List all tutorials
-            </ListItem>
-            <ListItem>
-              GET /api/posts/pentesting - List all pentesting guides
-            </ListItem>
-            <ListItem>
-              POST /api/posts - Create new post (Admin)
-            </ListItem>
-            <ListItem>
-              PUT /api/posts/:id - Update post (Admin)
-            </ListItem>
-            <ListItem>
-              DELETE /api/posts/:id - Delete post (Admin)
-            </ListItem>
-          </List>
+          <SubTitle>User Management (Admin Only)</SubTitle>
+          <CodeBlock>
+{`# Get all users
+curl -X GET "http://localhost:4000/api/users" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN"
 
-          <SubTitle>Comment Endpoints</SubTitle>
-          <List>
-            <ListItem>
-              GET /api/comments/post/:postId - Get comments for post
-            </ListItem>
-            <ListItem>
-              POST /api/comments - Create comment (Auth required)
-            </ListItem>
-            <ListItem>
-              PUT /api/comments/:id - Update comment (Owner/Admin)
-            </ListItem>
-            <ListItem>
-              DELETE /api/comments/:id - Delete comment (Owner/Admin)
-            </ListItem>
-          </List>
+# Get specific user
+curl -X GET "http://localhost:4000/api/users/{user_id}" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN"
 
-          <SubTitle>User Endpoints</SubTitle>
-          <List>
-            <ListItem>
-              GET /api/users/me - Get current user profile
-            </ListItem>
-            <ListItem>
-              PUT /api/users/me - Update user profile
-            </ListItem>
-            <ListItem>
-              GET /api/users/:id - Get user by ID (Admin)
-            </ListItem>
-            <ListItem>
-              GET /api/users - List all users (Admin)
-            </ListItem>
-          </List>
+# Update user role/premium status
+curl -X PUT "http://localhost:4000/api/users/{user_id}" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{"role": "USER", "isPremium": true}'
 
-          <SubTitle>Upload Endpoints</SubTitle>
-          <List>
-            <ListItem>
-              POST /api/upload - Upload file (Auth required)
-            </ListItem>
-            <ListItem>
-              DELETE /api/upload/:filename - Delete file (Admin)
-            </ListItem>
-          </List>
+# Delete user
+curl -X DELETE "http://localhost:4000/api/users/{user_id}" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN"`}
+          </CodeBlock>
+
+          <SubTitle>Posts (Admin Only)</SubTitle>
+          <CodeBlock>
+{`# Get all posts (including drafts)
+curl -X GET "http://localhost:4000/api/posts/admin/all" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+
+# Create post
+curl -X POST "http://localhost:4000/api/posts/admin" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "title": "Test Post",
+    "content": "Content here",
+    "category": "CODE_TUTORIAL",
+    "excerpt": "Optional excerpt",
+    "isPublished": true
+  }'
+
+# Update post
+curl -X PUT "http://localhost:4000/api/posts/admin/{post_id}" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "title": "Updated Title",
+    "content": "Updated content",
+    "category": "PENTESTING",
+    "excerpt": "Updated excerpt",
+    "isPublished": false
+  }'
+
+# Delete post
+curl -X DELETE "http://localhost:4000/api/posts/admin/{post_id}" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN"`}
+          </CodeBlock>
+
+          <SubTitle>Comments</SubTitle>
+          <Description>
+            Normal users can create comments on published posts and delete their own comments.
+            Admins can manage all comments.
+          </Description>
+          <CodeBlock>
+{`# Create comment (any authenticated user)
+curl -X POST http://localhost:4000/api/comments \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $USER_TOKEN" \\
+  -d '{
+    "content": "This is a test comment",
+    "postId": "post_id"
+  }'
+
+# Get all comments (admin only)
+curl -X GET "http://localhost:4000/api/comments/all" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+
+# Update comment (admin only)
+curl -X PUT "http://localhost:4000/api/comments/{comment_id}" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "content": "Updated comment content"
+  }'
+
+# Delete comment (admin or comment owner)
+curl -X DELETE "http://localhost:4000/api/comments/{comment_id}" \\
+  -H "Authorization: Bearer $USER_TOKEN"`}
+          </CodeBlock>
+
+          <SubTitle>File Uploads (Admin Only)</SubTitle>
+          <CodeBlock>
+{`# Upload file
+curl -X POST http://localhost:4000/api/upload \\
+  -H "Authorization: Bearer $ADMIN_TOKEN" \\
+  -F "file=@path/to/file.pdf"
+
+# Response:
+{
+  "url": "/uploads/timestamp-random.pdf",
+  "name": "file.pdf"
+}
+
+# Create post with file (after uploading)
+curl -X POST http://localhost:4000/api/posts/admin \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $ADMIN_TOKEN" \\
+  -d '{
+    "title": "Post with File",
+    "content": "Content here",
+    "category": "CODE_TUTORIAL",
+    "files": [
+      {
+        "name": "file.pdf",
+        "url": "/uploads/timestamp-random.pdf"
+      }
+    ]
+  }'`}
+          </CodeBlock>
 
           <SubTitle>Response Formats</SubTitle>
           <CodeBlock>
@@ -410,16 +447,6 @@ Content-Type: application/json
   }
 }`}
           </CodeBlock>
-
-          <SubTitle>Rate Limits</SubTitle>
-          <List>
-            <ListItem>
-              Free tier: 60 requests per hour
-            </ListItem>
-            <ListItem>
-              Premium tier: 1000 requests per hour
-            </ListItem>
-          </List>
         </Section>
 
         <Section>
