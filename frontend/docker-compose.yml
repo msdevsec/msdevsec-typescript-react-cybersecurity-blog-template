@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./.env:/app/.env
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_TINYMCE_API_KEY: pvpqc2dpj92h65n7folvk7p44vwksu7f8l1sg7r1ujv87pfg
+      WATCHPACK_POLLING: "true"

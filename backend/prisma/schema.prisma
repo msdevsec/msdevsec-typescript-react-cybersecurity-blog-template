@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  firstName String
+  lastName  String
+  role      String   @default("USER")
+  isPremium Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+  comments  Comment[]
+}
+
+enum PostCategory {
+  CODE_TUTORIAL
+  PENTESTING
+}
+
+model Post {
+  id                  String      @id @default(cuid())
+  title               String
+  content            String
+  category           PostCategory
+  slug               String      @unique
+  excerpt            String?
+  isPublished        Boolean     @default(false)
+  author             User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId           String
+  comments           Comment[]
+  files              File[]
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@index([category])
+  @@index([authorId])
+  @@index([isPublished])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([postId])
+}
+
+model File {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+}

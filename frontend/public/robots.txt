@@ -1,0 +1,28 @@
+# robots.txt for msdevsec
+# Allow all crawlers to index public content
+# Block access to admin and auth pages
+
+User-agent: *
+
+# Allow
+Allow: /
+Allow: /tutorials
+Allow: /docs
+Allow: /community
+Allow: /premium
+Allow: /sitemap.xml
+
+# Block admin and auth pages
+Disallow: /admin
+Disallow: /auth/*
+Disallow: /api/*
+
+# Block draft content
+Disallow: /tutorials/*/draft
+Disallow: /premium/*/draft
+
+# Crawl delay
+Crawl-delay: 10
+
+# Sitemap location
+Sitemap: https://msdevsec.com/sitemap.xml
