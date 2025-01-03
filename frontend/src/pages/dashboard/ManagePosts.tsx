@@ -65,6 +65,7 @@ const SortControls = styled.div`
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  align-items: center;
 `;
 
 const HeaderSection = styled.div`
@@ -141,7 +142,6 @@ const PostItem = styled.div`
   border: 1px solid #0F0;
   border-radius: 4px;
   transition: all 0.3s ease;
-  cursor: pointer;
 
   &:hover {
     background: rgba(0, 20, 0, 0.8);
@@ -217,6 +217,54 @@ const CategoryBadge = styled.span<{ category: string }>`
   border: 1px solid ${props => props.category === 'PENTESTING' ? '#FF0000' : '#0F0'};
 `;
 
+const Checkbox = styled.input`
+  margin-right: 1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  accent-color: #9F00FF;
+`;
+
+const SelectAllButton = styled.button`
+  background: transparent;
+  border: none;
+  color: #0F0;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+  }
+`;
+
+const DeleteSelectedButton = styled.button`
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #FF0000;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: #FF0000;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: auto;
+
+  &:hover {
+    background: rgba(255, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
 const ManagePosts: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -224,6 +272,7 @@ const ManagePosts: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<SortField>('createdAt');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [selectedPosts, setSelectedPosts] = useState<Set<string>>(new Set());
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -280,6 +329,49 @@ const ManagePosts: React.FC = () => {
     fetchPosts();
   }, [token]);
 
+  const handleSelectAll = () => {
+    if (selectedPosts.size === filteredPosts.length) {
+      setSelectedPosts(new Set());
+    } else {
+      setSelectedPosts(new Set(filteredPosts.map(post => post.id)));
+    }
+  };
+
+  const handleSelectPost = (postId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newSelected = new Set(selectedPosts);
+    if (newSelected.has(postId)) {
+      newSelected.delete(postId);
+    } else {
+      newSelected.add(postId);
+    }
+    setSelectedPosts(newSelected);
+  };
+
+  const handleDeleteSelected = async () => {
+    if (!window.confirm(`Are you sure you want to delete ${selectedPosts.size} selected posts? This action cannot be undone.`)) {
+      return;
+    }
+
+    const deletePromises = Array.from(selectedPosts).map(postId =>
+      fetch(`http://localhost:4000/api/posts/admin/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+    );
+
+    try {
+      await Promise.all(deletePromises);
+      setPosts(posts.filter(post => !selectedPosts.has(post.id)));
+      setSelectedPosts(new Set());
+    } catch (error) {
+      console.error('Error deleting posts:', error);
+      alert('Failed to delete some posts');
+    }
+  };
+
   if (loading) {
     return (
       <Container>
@@ -292,20 +384,6 @@ const ManagePosts: React.FC = () => {
     return (
       <Container>
         <Title style={{ color: '#FF0000' }}>Error: {error}</Title>
-      </Container>
-    );
-  }
-
-  if (posts.length === 0) {
-    return (
-      <Container>
-        <Title>No published posts found</Title>
-        <SearchBar
-          type="text"
-          placeholder="Search posts by title..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
       </Container>
     );
   }
@@ -327,11 +405,13 @@ const ManagePosts: React.FC = () => {
     });
   };
 
-  const handleEditPost = (postId: string) => {
+  const handleEditPost = (postId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     navigate(`/dashboard/posts/${postId}/edit`);
   };
 
-  const handleUnpublishPost = async (postId: string) => {
+  const handleUnpublishPost = async (postId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!window.confirm('Are you sure you want to unpublish this post? It will be moved to drafts.')) {
       return;
     }
@@ -352,15 +432,20 @@ const ManagePosts: React.FC = () => {
         throw new Error('Failed to unpublish post');
       }
 
-      // Remove the post from the list
       setPosts(posts.filter(post => post.id !== postId));
+      setSelectedPosts(prev => {
+        const newSelected = new Set(prev);
+        newSelected.delete(postId);
+        return newSelected;
+      });
     } catch (error) {
       console.error('Error unpublishing post:', error);
       alert('Failed to unpublish post');
     }
   };
 
-  const handleDeletePost = async (postId: string) => {
+  const handleDeletePost = async (postId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!window.confirm('Are you sure you want to permanently delete this post? This action cannot be undone.')) {
       return;
     }
@@ -377,8 +462,12 @@ const ManagePosts: React.FC = () => {
         throw new Error('Failed to delete post');
       }
 
-      // Remove the post from the list
       setPosts(posts.filter(post => post.id !== postId));
+      setSelectedPosts(prev => {
+        const newSelected = new Set(prev);
+        newSelected.delete(postId);
+        return newSelected;
+      });
     } catch (error) {
       console.error('Error deleting post:', error);
       alert('Failed to delete post');
@@ -404,6 +493,14 @@ const ManagePosts: React.FC = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <SortControls>
+        <SelectAllButton onClick={handleSelectAll}>
+          <Checkbox
+            type="checkbox"
+            checked={selectedPosts.size === filteredPosts.length && filteredPosts.length > 0}
+            readOnly
+          />
+          Select All
+        </SelectAllButton>
         <SortButton
           active={sortField === 'title'}
           order={sortField === 'title' ? sortOrder : undefined}
@@ -425,6 +522,11 @@ const ManagePosts: React.FC = () => {
         >
           Date
         </SortButton>
+        {selectedPosts.size > 0 && (
+          <DeleteSelectedButton onClick={handleDeleteSelected}>
+            Delete Selected ({selectedPosts.size})
+          </DeleteSelectedButton>
+        )}
       </SortControls>
       <PostList>
         {filteredPosts.map(post => (
@@ -432,6 +534,12 @@ const ManagePosts: React.FC = () => {
               const baseUrl = post.category === 'CODE_TUTORIAL' ? '/tutorials' : '/pentesting';
               navigate(`${baseUrl}/${post.slug}`);
             }}>
+            <Checkbox
+              type="checkbox"
+              checked={selectedPosts.has(post.id)}
+              onChange={(e) => handleSelectPost(post.id, e as any)}
+              onClick={(e) => e.stopPropagation()}
+            />
             <PostTitle>
               {post.title}
             </PostTitle>
@@ -441,10 +549,7 @@ const ManagePosts: React.FC = () => {
               </CategoryBadge>
               <span>{formatDate(post.createdAt)}</span>
               <ActionButtons>
-                <ActionButton onClick={(e) => {
-                  e.stopPropagation();
-                  handleEditPost(post.id);
-                }} title="Edit post">
+                <ActionButton onClick={(e) => handleEditPost(post.id, e)} title="Edit post">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -452,10 +557,7 @@ const ManagePosts: React.FC = () => {
                 </ActionButton>
                 <ActionButton 
                   className="unpublish"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleUnpublishPost(post.id);
-                  }}
+                  onClick={(e) => handleUnpublishPost(post.id, e)}
                   title="Unpublish post"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -464,10 +566,7 @@ const ManagePosts: React.FC = () => {
                 </ActionButton>
                 <ActionButton 
                   className="unpublish"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeletePost(post.id);
-                  }}
+                  onClick={(e) => handleDeletePost(post.id, e)}
                   title="Delete post permanently"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

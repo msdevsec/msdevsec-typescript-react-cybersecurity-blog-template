@@ -77,6 +77,7 @@ const PostCard = styled.div`
 
 const PostInfo = styled.div`
   flex: 1;
+  margin-left: 1rem;
 `;
 
 const PostTitle = styled.h3`
@@ -169,12 +170,49 @@ const SuccessMessage = styled.div`
   text-align: center;
 `;
 
+const Checkbox = styled.input`
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  accent-color: #9F00FF;
+`;
+
+const SelectAllButton = styled.button`
+  background: transparent;
+  border: none;
+  color: #9F00FF;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+
+  &:hover {
+    text-shadow: 0 0 5px rgba(159, 0, 255, 0.5);
+  }
+`;
+
+const DeleteSelectedButton = styled(DeleteButton)`
+  margin-left: 1rem;
+`;
+
+const Controls = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
 export const DraftsPage: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
   const [drafts, setDrafts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState('');
+  const [selectedPosts, setSelectedPosts] = useState<Set<string>>(new Set());
 
   const fetchDrafts = async () => {
     try {
@@ -199,9 +237,28 @@ export const DraftsPage: React.FC = () => {
     fetchDrafts();
   }, [token]);
 
+  const handleSelectAll = () => {
+    if (selectedPosts.size === drafts.length) {
+      setSelectedPosts(new Set());
+    } else {
+      setSelectedPosts(new Set(drafts.map(post => post.id)));
+    }
+  };
+
+  const handleSelectPost = (postId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newSelected = new Set(selectedPosts);
+    if (newSelected.has(postId)) {
+      newSelected.delete(postId);
+    } else {
+      newSelected.add(postId);
+    }
+    setSelectedPosts(newSelected);
+  };
+
   const publishPost = async (postId: string, category: string) => {
     try {
-      console.log('Publishing post:', postId); // Debug log
+      console.log('Publishing post:', postId);
       const response = await fetch(`http://localhost:4000/api/posts/admin/${postId}`, {
         method: 'PUT',
         headers: {
@@ -210,25 +267,19 @@ export const DraftsPage: React.FC = () => {
         },
         body: JSON.stringify({
           isPublished: true,
-          updateCreatedAt: true // This flag tells the backend to update createdAt when publishing from drafts
+          updateCreatedAt: true
         })
       });
 
-      console.log('Publish response status:', response.status); // Debug log
-
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Publish error:', errorData); // Debug log
         throw new Error('Failed to publish post');
       }
       
       const data = await response.json();
-      console.log('Publish success:', data); // Debug log
       
       setSuccessMessage('Post published successfully!');
       setTimeout(() => setSuccessMessage(''), 3000);
 
-      // Navigate to the appropriate category page
       const categoryPath = category === 'CODE_TUTORIAL' ? 'tutorials' : 'pentesting';
       navigate(`/${categoryPath}/${data.post.slug}`);
     } catch (error) {
@@ -254,10 +305,40 @@ export const DraftsPage: React.FC = () => {
       setSuccessMessage('Post deleted successfully!');
       setTimeout(() => setSuccessMessage(''), 3000);
       
-      // Refresh drafts after deleting
       fetchDrafts();
+      setSelectedPosts(prev => {
+        const newSelected = new Set(prev);
+        newSelected.delete(postId);
+        return newSelected;
+      });
     } catch (error) {
       console.error('Error deleting post:', error);
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    if (!window.confirm(`Are you sure you want to delete ${selectedPosts.size} selected posts? This action cannot be undone.`)) {
+      return;
+    }
+
+    const deletePromises = Array.from(selectedPosts).map(postId =>
+      fetch(`http://localhost:4000/api/posts/admin/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+    );
+
+    try {
+      await Promise.all(deletePromises);
+      setSuccessMessage(`${selectedPosts.size} posts deleted successfully!`);
+      setTimeout(() => setSuccessMessage(''), 3000);
+      setSelectedPosts(new Set());
+      fetchDrafts();
+    } catch (error) {
+      console.error('Error deleting posts:', error);
+      alert('Failed to delete some posts');
     }
   };
 
@@ -284,31 +365,54 @@ export const DraftsPage: React.FC = () => {
         ) : drafts.length === 0 ? (
           <NoPostsMessage>No draft posts found.</NoPostsMessage>
         ) : (
-          <PostsGrid>
-            {drafts.map(post => (
-              <PostCard key={post.id}>
-                <PostInfo>
-                  <PostTitle>{post.title}</PostTitle>
-                  <PostMeta>
-                    <CategoryTag>{post.category.replace('_', ' ')}</CategoryTag>
-                    Created {formatDate(post.createdAt)}
-                  </PostMeta>
-                  {post.excerpt && <PostExcerpt>{post.excerpt}</PostExcerpt>}
-                </PostInfo>
-                <ButtonGroup>
-                  <ActionButton onClick={() => navigate(`/dashboard/posts/${post.id}/edit`)}>
-                    Edit
-                  </ActionButton>
-                  <PublishButton onClick={() => publishPost(post.id, post.category)}>
-                    Publish
-                  </PublishButton>
-                  <DeleteButton onClick={() => deletePost(post.id)}>
-                    Delete
-                  </DeleteButton>
-                </ButtonGroup>
-              </PostCard>
-            ))}
-          </PostsGrid>
+          <>
+            <Controls>
+              <SelectAllButton onClick={handleSelectAll}>
+                <Checkbox
+                  type="checkbox"
+                  checked={selectedPosts.size === drafts.length && drafts.length > 0}
+                  readOnly
+                />
+                Select All
+              </SelectAllButton>
+              {selectedPosts.size > 0 && (
+                <DeleteSelectedButton onClick={handleDeleteSelected}>
+                  Delete Selected ({selectedPosts.size})
+                </DeleteSelectedButton>
+              )}
+            </Controls>
+            <PostsGrid>
+              {drafts.map(post => (
+                <PostCard key={post.id}>
+                  <Checkbox
+                    type="checkbox"
+                    checked={selectedPosts.has(post.id)}
+                    onChange={(e) => handleSelectPost(post.id, e as any)}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <PostInfo>
+                    <PostTitle>{post.title}</PostTitle>
+                    <PostMeta>
+                      <CategoryTag>{post.category.replace('_', ' ')}</CategoryTag>
+                      Created {formatDate(post.createdAt)}
+                    </PostMeta>
+                    {post.excerpt && <PostExcerpt>{post.excerpt}</PostExcerpt>}
+                  </PostInfo>
+                  <ButtonGroup>
+                    <ActionButton onClick={() => navigate(`/dashboard/posts/${post.id}/edit`)}>
+                      Edit
+                    </ActionButton>
+                    <PublishButton onClick={() => publishPost(post.id, post.category)}>
+                      Publish
+                    </PublishButton>
+                    <DeleteButton onClick={() => deletePost(post.id)}>
+                      Delete
+                    </DeleteButton>
+                  </ButtonGroup>
+                </PostCard>
+              ))}
+            </PostsGrid>
+          </>
         )}
       </PageCard>
     </Container>
