@@ -5,10 +5,10 @@ import styled from 'styled-components';
 
 const RegisterContainer = styled.div`
   position: relative;
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 10rem 2rem 4rem;
   z-index: 10;
 `;
 
@@ -20,7 +20,6 @@ const RegisterCard = styled.div`
   box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
   border-radius: 0.5rem;
   padding: 2rem;
-  margin: 1rem;
 `;
 
 const Logo = styled.h1`
@@ -29,8 +28,17 @@ const Logo = styled.h1`
   text-align: center;
   color: #0F0;
   font-family: 'Orbitron', sans-serif;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   text-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+`;
+
+const Subtitle = styled.p`
+  font-size: 1rem;
+  text-align: center;
+  color: rgba(0, 255, 0, 0.8);
+  font-family: 'Roboto Mono', monospace;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
 `;
 
 const Title = styled.h2`
@@ -60,9 +68,14 @@ const Input = styled.input`
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid #0F0;
   border-radius: 0.375rem;
-  color: #fff;
+  color: #0F0;
   outline: none;
   transition: all 0.3s ease;
+  font-family: 'Roboto Mono', monospace;
+
+  &::placeholder {
+    color: rgba(0, 255, 0, 0.5);
+  }
 
   &:focus {
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
@@ -155,6 +168,7 @@ export const Register = () => {
     <RegisterContainer>
       <RegisterCard>
         <Logo>MSDEVSEC</Logo>
+        <Subtitle>Code Tutorials and Penetration Testing</Subtitle>
         {isSuccess ? (
           <SuccessMessage>
             Registration successful, redirecting...

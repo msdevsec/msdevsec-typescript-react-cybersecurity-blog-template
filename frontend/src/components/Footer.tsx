@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const FooterContainer = styled.footer`
-  background: rgba(0, 10, 0, 0.95);
+  background: rgba(0, 0, 0, 0.98);
   border-top: 1px solid #0F0;
   padding: 2rem;
   margin-top: 1rem;

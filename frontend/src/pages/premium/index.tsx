@@ -11,26 +11,27 @@ const Container = styled.div`
 
 const GoBackButton = styled.button`
   padding: 0.75rem 1.5rem;
-  background: rgba(159, 0, 255, 0.1);
-  border: 1px solid #9F00FF;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid #FFD700;
   border-radius: 4px;
-  color: #9F00FF;
+  color: #FFD700;
   font-family: 'Orbitron', sans-serif;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
   min-width: 120px;
   margin-bottom: 2rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 
   &:hover {
-    background: rgba(159, 0, 255, 0.2);
-    box-shadow: 0 0 10px rgba(159, 0, 255, 0.3);
-    transform: translateY(-2px);
+    background: rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
   }
 `;
 
 const NoticeSection = styled.div`
-  background: rgba(0, 10, 0, 0.85);
+  background: rgba(0, 0, 0, 0.95);
   border: 1px solid #FFD700;
   padding: 2rem;
   margin-bottom: 3rem;
@@ -53,9 +54,9 @@ const NoticeSection = styled.div`
     left: -1px;
     right: -1px;
     bottom: -1px;
-    background: linear-gradient(45deg, #FFD700, #00FF00);
+    background: linear-gradient(45deg, #FFD700, rgba(255, 255, 255, 0.5));
     z-index: -1;
-    opacity: 0.3;
+    opacity: 0.2;
     clip-path: inherit;
   }
 `;
@@ -70,13 +71,13 @@ const NoticeTitle = styled.h2`
 `;
 
 const NoticeText = styled.p`
-  color: #00FF00;
+  color: rgba(255, 255, 255, 0.9);
   font-family: 'Roboto Mono', monospace;
   font-size: 1.1rem;
   text-align: center;
   line-height: 1.6;
   margin: 0;
-  text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 
   a {
     color: #FFD700;
@@ -102,8 +103,8 @@ const ComparisonGrid = styled.div`
 `;
 
 const PlanCard = styled.div<{ isPremium?: boolean }>`
-  background: rgba(0, 10, 0, 0.85);
-  border: 1px solid ${props => props.isPremium ? '#FFD700' : '#00FF00'};
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid ${props => props.isPremium ? '#FFD700' : 'rgba(255, 255, 255, 0.3)'};
   padding: 2rem;
   position: relative;
   clip-path: polygon(
@@ -125,8 +126,8 @@ const PlanCard = styled.div<{ isPremium?: boolean }>`
     right: -1px;
     bottom: -1px;
     background: ${props => props.isPremium 
-      ? 'linear-gradient(45deg, #FFD700, #00FF00)'
-      : 'linear-gradient(45deg, #00FF00, #004400)'};
+      ? 'linear-gradient(45deg, #FFD700, rgba(255, 255, 255, 0.5))'
+      : 'linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1))'};
     z-index: -1;
     opacity: 0.2;
     clip-path: inherit;
@@ -138,14 +139,14 @@ const PlanCard = styled.div<{ isPremium?: boolean }>`
 `;
 
 const PlanTitle = styled.h3<{ isPremium?: boolean }>`
-  color: ${props => props.isPremium ? '#FFD700' : '#00FF00'};
+  color: ${props => props.isPremium ? '#FFD700' : 'rgba(255, 255, 255, 0.9)'};
   font-family: 'Orbitron', sans-serif;
   font-size: 2rem;
   margin-bottom: 1.5rem;
   text-align: center;
   text-shadow: ${props => props.isPremium 
     ? '0 0 10px rgba(255, 215, 0, 0.5)'
-    : '0 0 10px rgba(0, 255, 0, 0.5)'};
+    : '0 0 10px rgba(255, 255, 255, 0.5)'};
 `;
 
 const FeatureList = styled.ul`
@@ -155,7 +156,7 @@ const FeatureList = styled.ul`
 `;
 
 const FeatureItem = styled.li<{ isPremium?: boolean }>`
-  color: ${props => props.isPremium ? '#FFD700' : '#00FF00'};
+  color: ${props => props.isPremium ? '#FFD700' : 'rgba(255, 255, 255, 0.8)'};
   font-family: 'Roboto Mono', monospace;
   font-size: 1rem;
   margin-bottom: 1rem;
@@ -163,7 +164,7 @@ const FeatureItem = styled.li<{ isPremium?: boolean }>`
   position: relative;
   text-shadow: ${props => props.isPremium 
     ? '0 0 5px rgba(255, 215, 0, 0.3)'
-    : '0 0 5px rgba(0, 255, 0, 0.3)'};
+    : '0 0 5px rgba(255, 255, 255, 0.3)'};
 
   &::before {
     content: '';
@@ -171,16 +172,16 @@ const FeatureItem = styled.li<{ isPremium?: boolean }>`
     left: 0;
     width: 16px;
     height: 16px;
-    background-image: ${props => `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='${props.isPremium ? '%23FFD700' : '%239F00FF'}'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E")`};
+    background-image: ${props => `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='${props.isPremium ? '%23FFD700' : '%23FFFFFF'}'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E")`};
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    filter: drop-shadow(0 0 2px ${props => props.isPremium ? '#FFD700' : '#9F00FF'});
+    filter: drop-shadow(0 0 2px ${props => props.isPremium ? '#FFD700' : 'rgba(255, 255, 255, 0.5)'});
     transition: all 0.3s ease;
   }
 
   &:hover::before {
-    filter: drop-shadow(0 0 5px ${props => props.isPremium ? '#FFD700' : '#9F00FF'});
+    filter: drop-shadow(0 0 5px ${props => props.isPremium ? '#FFD700' : 'rgba(255, 255, 255, 0.7)'});
     transform: scale(1.1);
   }
 `;
@@ -204,7 +205,6 @@ const PremiumPage: React.FC = () => {
           </a>{' '}
           to subscribe to Premium Content or contact us at{' '}
           <a href="mailto:admin@msdevsec.com">admin@msdevsec.com</a>{' '}
-        
         </NoticeText>
       </NoticeSection>
 
@@ -233,7 +233,6 @@ const PremiumPage: React.FC = () => {
             <FeatureItem isPremium>Deployment & DevOps guides</FeatureItem>
             <FeatureItem isPremium>Complete source code & assets</FeatureItem>
             <FeatureItem isPremium>Priority support channel</FeatureItem>
-            
           </FeatureList>
         </PlanCard>
       </ComparisonGrid>

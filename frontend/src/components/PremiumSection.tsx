@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Section = styled.section`
   padding: 4rem 2rem;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.95),
-    rgba(0, 20, 0, 0.98)
-  );
+  background: rgba(0, 0, 0, 0.98);
   position: relative;
   overflow: hidden;
 
@@ -71,13 +67,12 @@ const Title = styled.h2`
 
 const Description = styled.p`
   font-family: 'Roboto Mono', monospace;
-  color: #00FF00;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1.2rem;
   line-height: 1.6;
   margin-bottom: 2rem;
   max-width: 800px;
-  opacity: 0.9;
-  text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 `;
 
 const FeaturesGrid = styled.div`
@@ -119,12 +114,11 @@ const FeatureTitle = styled.h3`
 `;
 
 const FeatureDescription = styled.p`
-  color: #00FF00;
+  color: rgba(255, 255, 255, 0.8);
   font-family: 'Roboto Mono', monospace;
   font-size: 0.9rem;
-  opacity: 0.8;
   line-height: 1.4;
-  text-shadow: 0 0 5px rgba(0, 255, 0, 0.2);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 `;
 
 const FeatureContent = styled.div`
@@ -134,8 +128,8 @@ const FeatureContent = styled.div`
 `;
 
 const FeatureCard = styled(Link)`
-  background: rgba(0, 10, 0, 0.85);
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 1.5rem;
   text-decoration: none;
   cursor: pointer;
@@ -166,7 +160,7 @@ const FeatureCard = styled(Link)`
     background: linear-gradient(
       45deg,
       rgba(255, 215, 0, 0.1),
-      rgba(0, 255, 0, 0.1)
+      rgba(255, 255, 255, 0.1)
     );
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -182,7 +176,7 @@ const FeatureCard = styled(Link)`
     background: linear-gradient(
       45deg,
       #FFD700,
-      #00FF00
+      rgba(255, 255, 255, 0.5)
     );
     z-index: -1;
     opacity: 0;
@@ -199,7 +193,7 @@ const FeatureCard = styled(Link)`
     }
 
     &::after {
-      opacity: 0.5;
+      opacity: 0.2;
     }
 
     ${FeatureTitle} {
@@ -212,7 +206,7 @@ const FeatureCard = styled(Link)`
     }
 
     ${FeatureDescription} {
-      text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
     }
   }
 `;
@@ -250,7 +244,7 @@ const CTAButton = styled(Link)`
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(45deg, #FFD700, #00FF00);
+    background: linear-gradient(45deg, #FFD700, rgba(255, 255, 255, 0.5));
     z-index: -1;
     opacity: 0;
     transition: opacity 0.3s ease;
