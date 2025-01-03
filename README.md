@@ -6,13 +6,6 @@ A modern, secure blog platform template built with TypeScript, React, and Node.j
 🎥 **Watch Demo:**
 Coming soon... (Premium version showcase)
 
-## 🌟 Live Demo & Commercial Version
-
-### 🎮 Try it Live
-Visit [www.msdevsec.com](https://www.msdevsec.com) to see the blog platform in action with all premium features enabled.
-
-### 💼 Get the Commercial Version
-For pricing, customization options, and access to the complete commercial source code with all premium features, contact us at https://msdevsec.com/contact or [admin@msdevsec.com](mailto:admin@msdevsec.com). </br>
 
 ## 🛡️ Security Features
 - 🔐 JWT-based authentication
@@ -338,6 +331,14 @@ curl -X POST http://localhost:4000/api/posts/admin \
 
 - Access to premium content endpoints
 - Priority API support
+
+## 🌟 Live Demo & Commercial Version
+
+### 🎮 Try it Live
+Visit [www.msdevsec.com](https://www.msdevsec.com) to see the blog platform in action with all premium features enabled.
+
+### 💼 Get the Commercial Version
+For pricing, customization options, and access to the complete commercial source code with all premium features, contact us at https://msdevsec.com/contact or [admin@msdevsec.com](mailto:admin@msdevsec.com). </br>
 
 
 ## 🌐 Community Resources
