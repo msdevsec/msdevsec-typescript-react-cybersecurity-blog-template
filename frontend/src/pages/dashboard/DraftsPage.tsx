@@ -258,7 +258,20 @@ export const DraftsPage: React.FC = () => {
 
   const publishPost = async (postId: string, category: string) => {
     try {
-      console.log('Publishing post:', postId);
+      // First, fetch the current post data to get any attached files
+      const getResponse = await fetch(`http://localhost:4000/api/posts/admin/${postId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!getResponse.ok) {
+        throw new Error('Failed to fetch post data');
+      }
+
+      const postData = await getResponse.json();
+      
+      // Now update the post with isPublished=true while preserving files
       const response = await fetch(`http://localhost:4000/api/posts/admin/${postId}`, {
         method: 'PUT',
         headers: {
@@ -267,7 +280,8 @@ export const DraftsPage: React.FC = () => {
         },
         body: JSON.stringify({
           isPublished: true,
-          updateCreatedAt: true
+          updateCreatedAt: true,
+          files: postData.files // Preserve any existing files
         })
       });
 
