@@ -158,10 +158,10 @@ For pricing, customization options, and access to the complete commercial source
 
 Complete API reference with example usage. Set your tokens as environment variables:
 
-# Admin token
+Admin token
 ADMIN_TOKEN="insert your admin token here"
 
-# User token
+User token
 USER_TOKEN="insert your user token here"
 
 ### Authentication
