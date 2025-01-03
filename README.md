@@ -22,13 +22,23 @@ Coming soon... (Premium version showcase)
 # Clone the repository
 git clone https://github.com/msdevsec/msdevsec-typescript-react-cybersecurity-blog-template.git
 cd msdevsec-typescript-react-cybersecurity-blog-template
+```
 
+### 2. 🔧 Prerequisites
+- Get your free TinyMCE API key from [https://www.tiny.cloud/auth/signup/](https://www.tiny.cloud/auth/signup/)
+- You'll need this API key for the rich text editor in the blog
+
+### 3. 📝 Environment Setup
+```bash
 # Set up environment files
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
+
+# Add your TinyMCE API key to frontend/.env
+# VITE_TINYMCE_API_KEY=your-api-key-here
 ```
 
-### 2. 🔧 Start Backend Services
+### 4. 🚀 Start Backend Services
 ```bash
 # Terminal 1: Start backend containers
 cd backend
@@ -45,7 +55,7 @@ docker-compose exec backend npx prisma migrate deploy
 docker-compose exec backend npx prisma studio
 ```
 
-### 3. 🎨 Start Frontend Services
+### 5. 🎨 Start Frontend Services
 ```bash
 # Terminal 3: Start frontend
 cd frontend
