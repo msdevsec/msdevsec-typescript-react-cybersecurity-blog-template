@@ -119,7 +119,7 @@ const SuccessMessage = styled.div`
   text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 `;
 
-const ForgotPassword = styled(Link)`
+const StyledLink = styled(Link)`
   display: block;
   text-align: center;
   color: #0F0;
@@ -134,6 +134,18 @@ const ForgotPassword = styled(Link)`
     text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
   }
 `;
+
+const SignUpLink = styled(StyledLink)`
+  color: #9F00FF;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+
+  &:hover {
+    text-shadow: 0 0 10px rgba(159, 0, 255, 0.5);
+  }
+`;
+
+const ForgotPassword = styled(StyledLink)``;
 
 const ValidationError = styled.div`
   color: #FF0000;
@@ -217,6 +229,9 @@ export const Login = () => {
                 Sign In
               </SubmitButton>
 
+              <SignUpLink to="/register">
+                No Account? Sign Up Now!
+              </SignUpLink>
               <ForgotPassword to="/premium">
                 Forgot your password? (Premium Feature)
               </ForgotPassword>

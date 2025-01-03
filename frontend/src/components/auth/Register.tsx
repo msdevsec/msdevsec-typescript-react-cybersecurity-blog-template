@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import styled from 'styled-components';
 
@@ -123,6 +123,32 @@ const ValidationError = styled.div`
   color: #FF0000;
   font-size: 0.75rem;
   margin-top: 0.25rem;
+`;
+
+const StyledLink = styled(Link)`
+  display: block;
+  text-align: center;
+  color: #0F0;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  }
+`;
+
+const SignInLink = styled(StyledLink)`
+  color: #9F00FF;
+  font-weight: 600;
+  margin-top: 1rem;
+
+  &:hover {
+    text-shadow: 0 0 10px rgba(159, 0, 255, 0.5);
+  }
 `;
 
 export const Register = () => {
@@ -281,6 +307,10 @@ export const Register = () => {
               >
                 Create Account
               </SubmitButton>
+
+              <SignInLink to="/login">
+                Already have an account? Sign In Now!
+              </SignInLink>
             </form>
           </>
         )}

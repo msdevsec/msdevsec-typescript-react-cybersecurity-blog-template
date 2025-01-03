@@ -41,11 +41,11 @@ const GoBackButton = styled.button`
 `;
 
 const DashboardCard = styled.div`
-  background: rgba(0, 20, 0, 0.6);
-  border: 1px solid #0F0;
+  background: rgba(20, 0, 30, 0.6);
+  border: 1px solid #9F00FF;
   border-radius: 8px;
   padding: 2rem;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 20px rgba(159, 0, 255, 0.1);
 `;
 
 const Title = styled.h1`
@@ -59,7 +59,7 @@ const Title = styled.h1`
 const Section = styled.div`
   margin-bottom: 2rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+  border-bottom: 1px solid rgba(159, 0, 255, 0.2);
 
   &:last-child {
     margin-bottom: 0;
@@ -69,11 +69,11 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  color: #0F0;
+  color: #9F00FF;
   font-family: 'Orbitron', sans-serif;
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+  text-shadow: 0 0 5px rgba(159, 0, 255, 0.3);
 `;
 
 const InfoGrid = styled.div`
@@ -85,10 +85,10 @@ const InfoGrid = styled.div`
 `;
 
 const InfoItem = styled.div`
-  background: rgba(0, 20, 0, 0.4);
+  background: rgba(20, 0, 30, 0.4);
   padding: 1rem;
   border-radius: 4px;
-  border: 1px solid rgba(0, 255, 0, 0.2);
+  border: 1px solid rgba(159, 0, 255, 0.2);
   min-height: 80px;
   display: flex;
   flex-direction: column;
@@ -96,14 +96,14 @@ const InfoItem = styled.div`
 `;
 
 const Label = styled.p`
-  color: rgba(0, 255, 0, 0.7);
+  color: rgba(159, 0, 255, 0.7);
   font-family: 'Roboto Mono', monospace;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
 `;
 
 const Value = styled.p<{ isAccountType?: boolean }>`
-  color: ${props => props.isAccountType ? 'inherit' : '#0F0'};
+  color: ${props => props.isAccountType ? 'inherit' : '#9F00FF'};
   font-family: 'Orbitron', sans-serif;
   font-size: 1.1rem;
   overflow: hidden;
@@ -117,23 +117,24 @@ const Value = styled.p<{ isAccountType?: boolean }>`
     word-break: break-all;
     position: relative;
     z-index: 1;
-    background: rgba(0, 20, 0, 0.9);
+    background: rgba(20, 0, 30, 0.9);
     padding: 0.25rem;
     border-radius: 4px;
   }
 `;
 
 const AccountTypeValue = styled(Value)`
-  color: ${props => props.children === 'Premium' ? '#FFD700' : '#0F0'};
-  text-shadow: ${props => props.children === 'Premium' ? '0 0 5px rgba(255, 215, 0, 0.3)' : '0 0 5px rgba(0, 255, 0, 0.3)'};
+  color: ${props => props.children === 'Premium' ? '#FFD700' : '#9F00FF'};
+  text-shadow: ${props => props.children === 'Premium' ? '0 0 5px rgba(255, 215, 0, 0.3)' : '0 0 5px rgba(159, 0, 255, 0.3)'};
 `;
 
 const PremiumCard = styled.div`
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(0, 0, 0, 0.8);
   border: 1px solid #FFD700;
   border-radius: 8px;
   padding: 2rem;
   margin-bottom: 2rem;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
 `;
 
 const PremiumTitle = styled(SectionTitle)`
@@ -208,22 +209,22 @@ const CommentList = styled.div`
 `;
 
 const CommentCard = styled.div`
-  background: rgba(0, 20, 0, 0.4);
-  border: 1px solid rgba(0, 255, 0, 0.2);
+  background: rgba(20, 0, 30, 0.4);
+  border: 1px solid rgba(159, 0, 255, 0.2);
   border-radius: 4px;
   padding: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(0, 20, 0, 0.6);
+    background: rgba(20, 0, 30, 0.6);
     transform: translateX(5px);
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 10px rgba(159, 0, 255, 0.2);
   }
 `;
 
 const CommentContent = styled.p`
-  color: rgba(0, 255, 0, 0.8);
+  color: rgba(159, 0, 255, 0.8);
   font-family: 'Roboto Mono', monospace;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
@@ -232,14 +233,14 @@ const CommentContent = styled.p`
 const CommentMeta = styled.div`
   display: flex;
   justify-content: space-between;
-  color: rgba(0, 255, 0, 0.6);
+  color: rgba(159, 0, 255, 0.6);
   font-family: 'Roboto Mono', monospace;
   font-size: 0.8rem;
 `;
 
 const LoadingMessage = styled.div`
   text-align: center;
-  color: #0F0;
+  color: #9F00FF;
   font-size: 1.2rem;
   padding: 2rem;
 `;
@@ -252,9 +253,9 @@ const ErrorMessage = styled.div`
 `;
 
 const ViewAllButton = styled.button`
-  background: rgba(0, 255, 0, 0.1);
-  border: 1px solid #0F0;
-  color: #0F0;
+  background: rgba(159, 0, 255, 0.1);
+  border: 1px solid #9F00FF;
+  color: #9F00FF;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   font-family: 'Orbitron', sans-serif;
@@ -263,9 +264,9 @@ const ViewAllButton = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(0, 255, 0, 0.2);
+    background: rgba(159, 0, 255, 0.2);
     transform: translateY(-2px);
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 10px rgba(159, 0, 255, 0.2);
   }
 `;
 
@@ -408,7 +409,7 @@ export const UserDashboard: React.FC = () => {
             )}
           </div>
           {comments.length === 0 ? (
-            <div style={{ color: 'rgba(0, 255, 0, 0.7)' }}>No comments yet</div>
+            <div style={{ color: 'rgba(159, 0, 255, 0.7)' }}>No comments yet</div>
           ) : (
             <CommentList>
               {comments.slice(0, 3).map(comment => (
