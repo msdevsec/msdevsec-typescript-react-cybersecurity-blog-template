@@ -68,8 +68,7 @@ router.get('/:id', requireAuth, requireAdmin, async (req: Request, res: Response
 router.put('/:id', 
   requireAuth, 
   requireAdmin,
-  updateUserValidation,
-  validate,
+  validate(updateUserValidation),
   async (req: Request, res: Response) => {
     const { isPremium, role } = req.body;
     

@@ -7,7 +7,7 @@ import { prisma } from '../lib/prisma';
 export const createPost = async (req: AuthRequest, res: Response) => {
   try {
     console.log('Creating post with data:', req.body);
-    const { title, content, category, excerpt, isPublished = false } = req.body;
+    const { title, content, category, excerpt, isPublished = false, files = [] } = req.body;
     const authorId = req.user?.id;
 
     console.log('Author ID:', authorId);
@@ -36,10 +36,22 @@ export const createPost = async (req: AuthRequest, res: Response) => {
         excerpt,
         isPublished,
         slug,
-        authorId
+        authorId,
+        files: {
+          create: files.map((file: { name: string; url: string }) => ({
+            name: file.name,
+            url: file.url
+          }))
+        }
       },
       include: {
-        author: true
+        author: true,
+        files: true,
+        comments: {
+          include: {
+            author: true
+          }
+        }
       }
     });
     console.log('Post created:', post);
@@ -72,8 +84,11 @@ export const getPublishedPosts = async (req: Request, res: Response) => {
       where,
       include: {
         author: true,
-        _count: {
-          select: { comments: true }
+        files: true,
+        comments: {
+          include: {
+            author: true
+          }
         }
       },
       orderBy: [
@@ -112,8 +127,11 @@ export const getAllPosts = async (req: AuthRequest, res: Response) => {
       where,
       include: {
         author: true,
-        _count: {
-          select: { comments: true }
+        files: true,
+        comments: {
+          include: {
+            author: true
+          }
         }
       },
       orderBy: [
@@ -150,6 +168,7 @@ export const getPost = async (req: Request, res: Response) => {
       },
       include: {
         author: true,
+        files: true,
         comments: {
           include: {
             author: true
@@ -176,7 +195,7 @@ export const getPost = async (req: Request, res: Response) => {
 export const updatePost = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { title, content, category, excerpt, isPublished, updateCreatedAt = false } = req.body;
+    const { title, content, category, excerpt, isPublished, updateCreatedAt = false, files = [] } = req.body;
     const userId = req.user?.id;
 
     if (!userId) {
@@ -202,7 +221,14 @@ export const updatePost = async (req: AuthRequest, res: Response) => {
       ...(category && { category }),
       ...(excerpt && { excerpt }),
       ...(isPublished !== undefined && { isPublished }),
-      updatedAt: now
+      updatedAt: now,
+      files: {
+        deleteMany: {},
+        create: files.map((file: { name: string; url: string }) => ({
+          name: file.name,
+          url: file.url
+        }))
+      }
     };
 
     // Only update createdAt when publishing from drafts page
@@ -215,7 +241,13 @@ export const updatePost = async (req: AuthRequest, res: Response) => {
       where: { id },
       data: updateData,
       include: {
-        author: true
+        author: true,
+        files: true,
+        comments: {
+          include: {
+            author: true
+          }
+        }
       }
     });
 

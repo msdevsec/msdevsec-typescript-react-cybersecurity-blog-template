@@ -13,6 +13,11 @@ interface FilePickerMeta {
   title: string;
 }
 
+interface UploadedFile {
+  name: string;
+  url: string;
+}
+
 enum PostStatus {
   DRAFT = 'DRAFT',
   PUBLISHED = 'PUBLISHED'
@@ -210,6 +215,93 @@ const LoadingMessage = styled.div`
   padding: 2rem;
 `;
 
+const FileUploadArea = styled.div`
+  border: 2px dashed rgba(159, 0, 255, 0.3);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #9F00FF;
+
+  &:hover {
+    border-color: #9F00FF;
+    background: rgba(159, 0, 255, 0.05);
+  }
+
+  input {
+    display: none;
+  }
+`;
+
+const UploadedFiles = styled.div`
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
+const FilePreview = styled.div`
+  background: rgba(159, 0, 255, 0.1);
+  border: 1px solid rgba(159, 0, 255, 0.2);
+  border-radius: 4px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #9F00FF;
+  font-size: 0.9rem;
+
+  button {
+    background: none;
+    border: none;
+    color: #FF4444;
+    cursor: pointer;
+    padding: 0 0.25rem;
+  }
+`;
+
+const AttachmentsSection = styled.div`
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(0, 255, 0, 0.2);
+
+  h3 {
+    color: #0F0;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .attachments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .attachment-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #0F0;
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: rgba(0, 255, 0, 0.05);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(0, 255, 0, 0.1);
+      transform: translateX(5px);
+    }
+
+    svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+`;
+
 const editorConfig = {
   height: 500,
   menubar: true,
@@ -302,6 +394,8 @@ export const EditPost: React.FC = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [status, setStatus] = useState<PostStatus>(PostStatus.DRAFT);
   const [initialStatus, setInitialStatus] = useState<PostStatus>(PostStatus.DRAFT);
+  const [files, setFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -324,6 +418,7 @@ export const EditPost: React.FC = () => {
         const currentStatus = post.isPublished ? PostStatus.PUBLISHED : PostStatus.DRAFT;
         setStatus(currentStatus);
         setInitialStatus(currentStatus);
+        setUploadedFiles(post.files || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load post');
       } finally {
@@ -335,6 +430,42 @@ export const EditPost: React.FC = () => {
       fetchPost();
     }
   }, [id, token]);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setFiles(prev => [...prev, ...newFiles]);
+
+      // Upload files immediately
+      for (const file of newFiles) {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        try {
+          const response = await fetch('http://localhost:4000/api/upload', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            body: formData
+          });
+
+          if (!response.ok) throw new Error('Failed to upload file');
+          
+          const data = await response.json();
+          setUploadedFiles(prev => [...prev, { name: file.name, url: data.url }]);
+        } catch (err) {
+          console.error('File upload error:', err);
+          setError('Failed to upload file');
+        }
+      }
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -355,8 +486,9 @@ export const EditPost: React.FC = () => {
           content,
           category,
           excerpt,
+          files: uploadedFiles,
           isPublished: status === PostStatus.PUBLISHED,
-          updateCreatedAt: isPublishing // Update createdAt when publishing from draft
+          updateCreatedAt: isPublishing
         })
       });
 
@@ -366,11 +498,9 @@ export const EditPost: React.FC = () => {
 
       const data = await response.json();
 
-      // Navigate to drafts page if saving as draft, otherwise go to the appropriate category page
       if (status === PostStatus.DRAFT) {
         navigate('/dashboard/drafts');
       } else {
-        // Determine the correct category path
         const categoryPath = category === 'CODE_TUTORIAL' ? 'tutorials' : 'pentesting';
         navigate(`/${categoryPath}/${data.post.slug}`);
       }
@@ -423,6 +553,27 @@ export const EditPost: React.FC = () => {
             required
           />
 
+          <FileUploadArea>
+            <input
+              type="file"
+              id="file-upload"
+              multiple
+              onChange={handleFileChange}
+              accept=".pdf,.doc,.docx,.txt"
+            />
+            <label htmlFor="file-upload">
+              Drop files here or click to upload attachments
+            </label>
+            <UploadedFiles>
+              {uploadedFiles.map((file, index) => (
+                <FilePreview key={index}>
+                  <span>{file.name}</span>
+                  <button type="button" onClick={() => removeFile(index)}>×</button>
+                </FilePreview>
+              ))}
+            </UploadedFiles>
+          </FileUploadArea>
+
           <StatusGroup>
             <Select
               value={status}
@@ -458,6 +609,27 @@ export const EditPost: React.FC = () => {
               className="preview-content"
               dangerouslySetInnerHTML={{ __html: content }}
             />
+            {uploadedFiles.length > 0 && (
+              <AttachmentsSection>
+                <h3>Attachments</h3>
+                <div className="attachments-list">
+                  {uploadedFiles.map((file, index) => (
+                    <a 
+                      key={index}
+                      href={`http://localhost:4000${file.url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="attachment-link"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      {file.name}
+                    </a>
+                  ))}
+                </div>
+              </AttachmentsSection>
+            )}
           </PreviewSection>
         )}
       </EditorCard>
