@@ -306,7 +306,7 @@ export const EditPost: React.FC = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/posts/${id}`, {
+        const response = await fetch(`http://localhost:4000/api/posts/admin/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

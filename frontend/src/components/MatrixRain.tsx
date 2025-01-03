@@ -13,6 +13,8 @@ const Canvas = styled.canvas`
 
 const MatrixRain: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dropsRef = useRef<number[]>([]);
+  const columnsRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -21,23 +23,36 @@ const MatrixRain: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
-    const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
     // Matrix characters
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
     const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops: number[] = [];
 
-    // Initialize drops
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
+    // Set canvas size and initialize drops
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = canvas.offsetHeight;
+
+      // Recalculate columns
+      const newColumns = Math.ceil(window.innerWidth / fontSize);
+      
+      // If we need more columns, add new drops
+      if (newColumns > columnsRef.current) {
+        for (let i = columnsRef.current; i < newColumns; i++) {
+          dropsRef.current[i] = 1;
+        }
+      }
+      
+      columnsRef.current = newColumns;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initialize drops if not already initialized
+    if (dropsRef.current.length === 0) {
+      for (let i = 0; i < columnsRef.current; i++) {
+        dropsRef.current[i] = 1;
+      }
     }
 
     const draw = () => {
@@ -50,21 +65,21 @@ const MatrixRain: React.FC = () => {
       ctx.font = `${fontSize}px monospace`;
 
       // Draw characters
-      for (let i = 0; i < drops.length; i++) {
+      for (let i = 0; i < columnsRef.current; i++) {
         const char = chars[Math.floor(Math.random() * chars.length)];
         const x = i * fontSize;
-        const y = drops[i] * fontSize;
+        const y = dropsRef.current[i] * fontSize;
 
         ctx.fillText(char, x, y);
 
         // Reset drop when it reaches bottom or randomly
         if (y > canvas.height && Math.random() > 0.99) { // Reduced probability for slower reset
-          drops[i] = 0;
+          dropsRef.current[i] = 0;
         }
 
         // Slow down the drop speed
         if (Math.random() > 0.975) { // Reduced probability for slower movement
-          drops[i]++;
+          dropsRef.current[i]++;
         }
       }
     };

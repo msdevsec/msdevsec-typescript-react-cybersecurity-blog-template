@@ -50,31 +50,43 @@ const Container = styled.div`
 const Title = styled.h2`
   font-family: 'Orbitron', sans-serif;
   color: #FFD700;
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin-bottom: 1.5rem;
-  text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5),
+               0 0 40px rgba(255, 215, 0, 0.3);
+  letter-spacing: 2px;
+  position: relative;
   
-  &:hover {
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #FFD700, transparent);
   }
 `;
 
 const Description = styled.p`
   font-family: 'Roboto Mono', monospace;
-  color: #0F0;
+  color: #00FF00;
   font-size: 1.2rem;
   line-height: 1.6;
   margin-bottom: 2rem;
   max-width: 800px;
   opacity: 0.9;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
 `;
 
 const FeaturesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 2rem;
   width: 100%;
   margin: 2rem 0;
+  perspective: 1000px;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
@@ -92,7 +104,7 @@ const CheckIcon = styled.svg`
   margin-right: 1rem;
   flex-shrink: 0;
   margin-top: 0.25rem;
-  filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.5));
+  filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.5));
   transition: all 0.3s ease;
 `;
 
@@ -103,43 +115,104 @@ const FeatureTitle = styled.h3`
   margin-bottom: 0.5rem;
   text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
   transition: all 0.3s ease;
+  letter-spacing: 1px;
 `;
 
 const FeatureDescription = styled.p`
-  color: #0F0;
+  color: #00FF00;
   font-family: 'Roboto Mono', monospace;
   font-size: 0.9rem;
   opacity: 0.8;
   line-height: 1.4;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.2);
 `;
 
 const FeatureContent = styled.div`
   flex: 1;
+  position: relative;
+  z-index: 1;
 `;
 
 const FeatureCard = styled(Link)`
-  background: rgba(0, 20, 0, 0.7);
-  border: 1px solid #FFD700;
-  border-radius: 8px;
+  background: rgba(0, 10, 0, 0.85);
+  border: 1px solid rgba(255, 215, 0, 0.3);
   padding: 1.5rem;
-  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
   display: flex;
   align-items: flex-start;
   text-align: left;
-  text-decoration: none;
-  cursor: pointer;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+  clip-path: polygon(
+    0 10px,
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 215, 0, 0.1),
+      rgba(0, 255, 0, 0.1)
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: linear-gradient(
+      45deg,
+      #FFD700,
+      #00FF00
+    );
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    clip-path: inherit;
+  }
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-    background: rgba(0, 20, 0, 0.8);
+    transform: translateY(-5px) translateZ(10px);
+    border-color: transparent;
+
+    &::before {
+      opacity: 1;
+    }
+
+    &::after {
+      opacity: 0.5;
+    }
 
     ${FeatureTitle} {
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
     }
 
     ${CheckIcon} {
-      filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.7));
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
+      transform: scale(1.1);
+    }
+
+    ${FeatureDescription} {
+      text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
     }
   }
 `;
@@ -149,17 +222,42 @@ const CTAButton = styled(Link)`
   background: transparent;
   color: #FFD700;
   border: 2px solid #FFD700;
-  padding: 1rem 2rem;
+  padding: 1.2rem 2.5rem;
   font-family: 'Orbitron', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   text-decoration: none;
-  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   transition: all 0.3s ease;
   margin-top: 2rem;
   position: relative;
   overflow: hidden;
+  clip-path: polygon(
+    0 10px,
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
 
   &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #FFD700, #00FF00);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    clip-path: inherit;
+  }
+
+  &::after {
     content: '';
     position: absolute;
     top: 0;
@@ -169,17 +267,21 @@ const CTAButton = styled(Link)`
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(255, 215, 0, 0.2),
+      rgba(255, 215, 0, 0.4),
       transparent
     );
     transition: 0.5s;
   }
 
   &:hover {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    color: #000;
+    text-shadow: none;
     
     &::before {
+      opacity: 1;
+    }
+
+    &::after {
       left: 100%;
     }
   }
