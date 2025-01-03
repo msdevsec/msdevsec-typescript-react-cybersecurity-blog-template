@@ -16,6 +16,8 @@ import LatestPentesting from './components/LatestPentesting';
 import PremiumSection from './components/PremiumSection';
 import { default as PremiumPage } from './pages/premium';
 import { default as CommunityPage } from './pages/community';
+import { default as RSSPage } from './pages/rss';
+import { default as SitemapPage } from './pages/sitemap';
 import { CreatePost } from './pages/dashboard/CreatePost';
 import { EditPost } from './pages/dashboard/EditPost';
 import { DraftsPage } from './pages/dashboard/DraftsPage';
@@ -47,6 +49,8 @@ const App: React.FC = () => {
           <Route path="/pentesting/:slug" element={<PostPage />} />
           <Route path="/premium" element={<PremiumPage />} />
           <Route path="/community" element={<CommunityPage />} />
+          <Route path="/rss" element={<RSSPage />} />
+          <Route path="/sitemap" element={<SitemapPage />} />
           <Route 
             path="/dashboard" 
             element={

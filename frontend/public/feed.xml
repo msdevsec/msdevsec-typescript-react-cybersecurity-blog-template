@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>msdevsec Blog</title>
+    <link>https://msdevsec.com</link>
+    <description>Code tutorials and Pentesting guides for cybersecurity enthusiasts and developers.</description>
+    <language>en-us</language>
+    <atom:link href="https://msdevsec.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <copyright>Copyright © 2024 msdevsec. All rights reserved.</copyright>
+    <category>Programming</category>
+    <category>Cybersecurity</category>
+    <category>Penetration Testing</category>
+    <category>Web Development</category>
+    <docs>https://msdevsec.com/rss</docs>
+    <generator>msdevsec RSS Generator</generator>
+    <ttl>60</ttl>
+
+    <!-- Category-specific feeds -->
+    <atom:link href="https://msdevsec.com/tutorials/feed.xml" rel="alternate" title="Code Tutorials Feed" type="application/rss+xml"/>
+    <atom:link href="https://msdevsec.com/pentesting/feed.xml" rel="alternate" title="Pentesting Feed" type="application/rss+xml"/>
+
+    <!-- Example entries (these will be dynamically generated in production) -->
+    <item>
+      <title>Getting Started with Web Security Testing</title>
+      <link>https://msdevsec.com/pentesting/web-security-testing</link>
+      <description>Learn the fundamentals of web security testing and essential tools for identifying vulnerabilities.</description>
+      <author>admin@msdevsec.com (msdevsec)</author>
+      <category>Penetration Testing</category>
+      <pubDate>Mon, 01 Jan 2024 12:00:00 GMT</pubDate>
+      <guid>https://msdevsec.com/pentesting/web-security-testing</guid>
+    </item>
+
+    <item>
+      <title>Building Secure React Applications</title>
+      <link>https://msdevsec.com/tutorials/secure-react-apps</link>
+      <description>Best practices for building secure React applications with modern security features.</description>
+      <author>admin@msdevsec.com (msdevsec)</author>
+      <category>Programming</category>
+      <category>Web Development</category>
+      <pubDate>Mon, 01 Jan 2024 10:00:00 GMT</pubDate>
+      <guid>https://msdevsec.com/tutorials/secure-react-apps</guid>
+    </item>
+  </channel>
+</rss>
