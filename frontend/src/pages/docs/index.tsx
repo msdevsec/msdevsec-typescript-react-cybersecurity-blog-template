@@ -2,25 +2,40 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import MatrixRain from '../../components/MatrixRain';
+import GoBackButton from '../../components/shared/GoBackButton';
 
 const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 2rem 2rem 2rem;
   position: relative;
-  min-height: auto;
-  padding: 6rem 1.5rem 0.5rem;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+`;
+
+const MatrixContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+`;
+
+const ContentContainer = styled.div`
+  position: relative;
+  z-index: 2;
 `;
 
 const ContentWrapper = styled.div`
-  max-width: 1000px;
   width: 100%;
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: rgba(0, 10, 0, 0.85);
+  border: 1px solid #0F0;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
+  margin-top: 1rem;
 `;
 
 const Title = styled.h1`
@@ -45,13 +60,8 @@ const Title = styled.h1`
 `;
 
 const Section = styled.div`
-  background: rgba(0, 10, 0, 0.85);
-  border: 1px solid #0F0;
-  border-radius: 12px;
-  padding: 2rem;
   margin: 1rem 0;
   width: 100%;
-  box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
 `;
 
 const Description = styled.p`
@@ -138,8 +148,12 @@ const ExternalLink = styled.a`
 const Docs: React.FC = () => {
   return (
     <Container>
-      <MatrixRain />
-      <ContentWrapper>
+      <MatrixContainer>
+        <MatrixRain />
+      </MatrixContainer>
+      <ContentContainer>
+        <GoBackButton />
+        <ContentWrapper>
         <Title>Documentation</Title>
         
         <Description>
@@ -424,7 +438,8 @@ Content-Type: application/json
             </ListItem>
           </List>
         </Section>
-      </ContentWrapper>
+        </ContentWrapper>
+      </ContentContainer>
     </Container>
   );
 };

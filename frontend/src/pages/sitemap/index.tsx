@@ -2,25 +2,37 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import MatrixRain from '../../components/MatrixRain';
+import GoBackButton from '../../components/shared/GoBackButton';
 
 const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 2rem 2rem 2rem;
   position: relative;
-  min-height: auto;
-  padding: 6rem 1.5rem 0.5rem;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+`;
+
+const MatrixContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+`;
+
+const ContentContainer = styled.div`
+  position: relative;
+  z-index: 2;
 `;
 
 const ContentWrapper = styled.div`
   max-width: 800px;
   width: 100%;
-  position: relative;
-  z-index: 1;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 1rem;
 `;
 
 const Title = styled.h1`
@@ -132,8 +144,12 @@ const ExternalLink = styled.a`
 const Sitemap: React.FC = () => {
   return (
     <Container>
-      <MatrixRain />
-      <ContentWrapper>
+      <MatrixContainer>
+        <MatrixRain />
+      </MatrixContainer>
+      <ContentContainer>
+        <GoBackButton />
+        <ContentWrapper>
         <Title>Sitemap</Title>
         
         <Section>
@@ -240,7 +256,8 @@ const Sitemap: React.FC = () => {
             </List>
           </SitemapSection>
         </Section>
-      </ContentWrapper>
+        </ContentWrapper>
+      </ContentContainer>
     </Container>
   );
 };

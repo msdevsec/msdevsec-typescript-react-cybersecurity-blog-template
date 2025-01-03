@@ -1,26 +1,37 @@
 import React from 'react';
 import styled from 'styled-components';
 import MatrixRain from '../../components/MatrixRain';
+import GoBackButton from '../../components/shared/GoBackButton';
 
 const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 2rem 2rem 2rem;
   position: relative;
-  padding: 10rem 2rem 2rem;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+`;
+
+const MatrixContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
   background: rgba(0, 0, 0, 0.95);
 `;
 
-const ContentWrapper = styled.div`
-  max-width: 1200px;
-  width: 100%;
+const ContentContainer = styled.div`
   position: relative;
-  z-index: 1;
+  z-index: 2;
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+  margin-top: 1rem;
 `;
 
 const Title = styled.h1`
@@ -182,8 +193,12 @@ const LearnCard = styled(FeatureCard)`
 const Community = () => {
   return (
     <Container>
-      <MatrixRain />
-      <ContentWrapper>
+      <MatrixContainer>
+        <MatrixRain />
+      </MatrixContainer>
+      <ContentContainer>
+        <GoBackButton />
+        <ContentWrapper>
         <Title>Join Our Community</Title>
         
         <Description>
@@ -225,7 +240,8 @@ const Community = () => {
             </FeatureDescription>
           </FeatureCard>
         </Features>
-      </ContentWrapper>
+        </ContentWrapper>
+      </ContentContainer>
     </Container>
   );
 };
