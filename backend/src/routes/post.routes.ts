@@ -24,6 +24,7 @@ protectedRouter.use(requireAdmin);
 
 protectedRouter.get('/all', getAllPosts);
 protectedRouter.post('/', validate(createPostValidation), createPost);
+protectedRouter.get('/:id', getPost); // Use consistent parameter name
 protectedRouter.put('/:id', validate(updatePostValidation), updatePost);
 protectedRouter.patch('/:id', validate(updatePostValidation), updatePost); // Add PATCH support
 protectedRouter.delete('/:id', deletePost);

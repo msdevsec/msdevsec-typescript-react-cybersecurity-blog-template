@@ -135,14 +135,15 @@ export const getAllPosts = async (req: AuthRequest, res: Response) => {
 // Get single post (public for published posts, admin for unpublished)
 export const getPost = async (req: Request, res: Response) => {
   try {
-    const { identifier } = req.params;
+    const { id, identifier } = req.params;
     const isAdmin = (req as AuthRequest).user?.role === 'ADMIN';
+    const paramToUse = id || identifier;
 
     const post = await prisma.post.findFirst({
       where: {
         OR: [
-          { id: identifier },
-          { slug: identifier }
+          { id: paramToUse },
+          { slug: paramToUse }
         ],
         // If not admin, only show published posts
         ...(isAdmin ? {} : { isPublished: true })
