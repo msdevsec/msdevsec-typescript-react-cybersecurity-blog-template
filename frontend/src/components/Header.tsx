@@ -57,7 +57,7 @@ const YouTubeLink = styled.a`
   transition: all 0.3s ease;
   margin-left: 0 rem;
   margin-top: 0.1rem;
-  text-shadow: 0 0 5px rgba(191, 0, 255, 0.5);
+  text-shadow: 5 0 10px rgba(191, 0, 255, 0.5);
   display: inline-flex;
   align-items: center;
   
@@ -125,8 +125,14 @@ const NavLink = styled(Link)`
   color: #0F0;
   text-decoration: none;
   font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
   position: relative;
   padding: 0.5rem 0;
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.8),
+               0 0 30px rgba(0, 255, 0, 0.6),
+               0 0 40px rgba(0, 255, 0, 0.4),
+               0 0 50px rgba(0, 255, 0, 0.2);
+  letter-spacing: 1px;
   
   &:after {
     content: '';
@@ -137,44 +143,60 @@ const NavLink = styled(Link)`
     left: 0;
     background-color: #0F0;
     transition: width 0.3s ease;
-    box-shadow: 0 0 5px #0F0;
+    box-shadow: 0 0 20px #0F0;
   }
   
-  &:hover:after {
-    width: 100%;
+  &:hover {
+    text-shadow: 0 0 25px rgba(0, 255, 0, 1),
+                 0 0 35px rgba(0, 255, 0, 0.8),
+                 0 0 45px rgba(0, 255, 0, 0.6),
+                 0 0 55px rgba(0, 255, 0, 0.4);
   }
-
-  @media (max-width: 768px) {
+  
+  &:hover::after {
     width: 100%;
-    text-align: center;
   }
 `;
 
 const DashboardLink = styled(NavLink)`
   color: #40E0FF;
-  text-shadow: 0 0 5px rgba(64, 224, 255, 0.5);
+  text-shadow: 0 0 20px rgba(64, 224, 255, 0.8),
+               0 0 30px rgba(64, 224, 255, 0.6),
+               0 0 40px rgba(64, 224, 255, 0.4),
+               0 0 50px rgba(64, 224, 255, 0.2);
+  letter-spacing: 1px;
   
   &:after {
     background-color: #40E0FF;
-    box-shadow: 0 0 5px #40E0FF;
+    box-shadow: 0 0 20px #40E0FF;
   }
   
   &:hover {
-    text-shadow: 0 0 10px rgba(64, 224, 255, 0.7);
+    text-shadow: 0 0 25px rgba(64, 224, 255, 1),
+                 0 0 35px rgba(64, 224, 255, 0.8),
+                 0 0 45px rgba(64, 224, 255, 0.6),
+                 0 0 55px rgba(64, 224, 255, 0.4);
   }
 `;
 
 const PremiumLink = styled(NavLink)`
   color: #FFD700;
-  text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+               0 0 30px rgba(255, 215, 0, 0.6),
+               0 0 40px rgba(255, 215, 0, 0.4),
+               0 0 50px rgba(255, 215, 0, 0.2);
+  letter-spacing: 1px;
   
   &:after {
     background-color: #FFD700;
-    box-shadow: 0 0 5px #FFD700;
+    box-shadow: 0 0 20px #FFD700;
   }
   
   &:hover {
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    text-shadow: 0 0 25px rgba(255, 215, 0, 1),
+                 0 0 35px rgba(255, 215, 0, 0.8),
+                 0 0 45px rgba(255, 215, 0, 0.6),
+                 0 0 55px rgba(255, 215, 0, 0.4);
   }
 `;
 
@@ -198,25 +220,44 @@ const LogoutButton = styled.button`
   }
 `;
 
+// Purple username text
 const UserName = styled.span`
   color: #9F00FF;
   font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
   font-weight: bold;
-  text-shadow: 0 0 5px #9F00FF;
+  text-shadow: 0 0 20px rgba(159, 0, 255, 0.8),
+               0 0 30px rgba(159, 0, 255, 0.6),
+               0 0 40px rgba(159, 0, 255, 0.4),
+               0 0 50px rgba(159, 0, 255, 0.2);
+  letter-spacing: 1px;
+  
+  &:hover {
+    text-shadow: 0 0 25px rgba(159, 0, 255, 1),
+                 0 0 35px rgba(159, 0, 255, 0.8),
+                 0 0 45px rgba(159, 0, 255, 0.6),
+                 0 0 55px rgba(159, 0, 255, 0.4);
+  }
 `;
 
 const PentestingLink = styled(NavLink)`
   color: #FF0000;
-  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  text-shadow: 0 0 20px rgba(255, 0, 0, 0.8),
+               0 0 30px rgba(255, 0, 0, 0.6),
+               0 0 40px rgba(255, 0, 0, 0.4),
+               0 0 50px rgba(255, 0, 0, 0.2);
   letter-spacing: 1px;
   
   &:after {
     background-color: #FF0000;
-    box-shadow: 0 0 10px #FF0000;
+    box-shadow: 0 0 20px #FF0000;
   }
   
   &:hover {
-    text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+    text-shadow: 0 0 25px rgba(255, 0, 0, 1),
+                 0 0 35px rgba(255, 0, 0, 0.8),
+                 0 0 45px rgba(255, 0, 0, 0.6),
+                 0 0 55px rgba(255, 0, 0, 0.4);
   }
 `;
 
