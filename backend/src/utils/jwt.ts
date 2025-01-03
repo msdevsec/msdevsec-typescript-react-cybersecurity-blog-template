@@ -24,3 +24,4 @@ export const extractTokenFromHeader = (authHeader?: string): string | null => {
   }
 
   return token;
+};
