@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const HeaderContainer = styled.header`
-  background: rgba(0, 0, 0, 0.9);
-  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.95);
+  padding: 0.5rem;
   border-bottom: 2px solid #0F0;
   box-shadow: 0 0 10px #0F0;
   position: fixed;
   width: 100%;
   top: 0;
   z-index: 1000;
-  min-height: 64px;
+  height: 60px;
+  display: flex;
+  align-items: center;
 `;
 
 const Nav = styled.nav`
@@ -20,56 +22,56 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   padding: 0 1rem;
+  position: relative;
 `;
 
 const LogoSection = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex: 0 0 auto;
-  margin-right: 3rem;
+  z-index: 2;
 `;
 
 const LogoImage = styled.img`
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  margin-right: 0.5rem;
 `;
 
 const Logo = styled(Link)`
   color: #0F0;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bold;
   text-decoration: none;
   font-family: 'Orbitron', sans-serif;
-  text-shadow: 0 0 5px #0F0;
+  text-shadow: 0 0 10px #0F0;
+  transition: text-shadow 0.3s ease;
   
   &:hover {
-    text-shadow: 0 0 10px #0F0;
+    text-shadow: 0 0 20px #0F0,
+                 0 0 30px #0F0,
+                 0 0 40px #0F0;
   }
 `;
 
 const YouTubeLink = styled.a`
   color: #bf00ff;
-  transition: all 0.3s ease;
-  margin-left: 0 rem;
-  margin-top: 0.1rem;
-  text-shadow: 5 0 10px rgba(191, 0, 255, 0.5);
   display: inline-flex;
   align-items: center;
+  margin-left: 0.5rem;
+  transition: all 0.3s ease;
   
   &:hover {
     color: #a000ff;
-    text-shadow: 0 0 10px rgba(191, 0, 255, 0.8);
+    filter: drop-shadow(0 0 10px rgba(191, 0, 255, 0.8));
   }
 
   svg {
-    width: 30px;
-    height: 30px;
-    filter: drop-shadow(0 0 2px rgba(191, 0, 255, 0.5));
+    width: 20px;
+    height: 20px;
   }
 `;
 
@@ -80,44 +82,43 @@ const HamburgerButton = styled.button`
   color: #0F0;
   cursor: pointer;
   padding: 0.5rem;
+  z-index: 2;
   transition: all 0.3s ease;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1200px) {
     display: block;
   }
 
   svg {
     width: 24px;
     height: 24px;
-    filter: drop-shadow(0 0 2px rgba(0, 255, 0, 0.5));
   }
 
   &:hover {
     color: #0F0;
-    filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.7));
+    filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.8));
   }
 `;
 
 const NavLinks = styled.div<{ isOpen: boolean }>`
   display: flex;
-  gap: 2rem;
   align-items: center;
-  flex: 1;
-  justify-content: flex-end;
-  white-space: nowrap;
+  gap: 1.5rem;
+  margin-left: auto;
 
-  @media (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+  @media (max-width: 1200px) {
+    position: fixed;
+    top: 60px;
+    right: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
+    bottom: 0;
+    width: 250px;
     flex-direction: column;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(0, 0, 0, 0.98);
     padding: 1rem;
-    gap: 1rem;
-    border-bottom: 2px solid #0F0;
-    box-shadow: 0 5px 10px rgba(0, 255, 0, 0.2);
+    gap: 0;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    display: flex;
   }
 `;
 
@@ -125,14 +126,11 @@ const NavLink = styled(Link)`
   color: #0F0;
   text-decoration: none;
   font-family: 'Orbitron', sans-serif;
-  font-size: 1rem;
-  position: relative;
+  font-size: 0.9rem;
   padding: 0.5rem 0;
-  text-shadow: 0 0 20px rgba(0, 255, 0, 0.8),
-               0 0 30px rgba(0, 255, 0, 0.6),
-               0 0 40px rgba(0, 255, 0, 0.4),
-               0 0 50px rgba(0, 255, 0, 0.2);
-  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+  transition: all 0.3s ease;
+  position: relative;
   
   &:after {
     content: '';
@@ -142,61 +140,77 @@ const NavLink = styled(Link)`
     bottom: 0;
     left: 0;
     background-color: #0F0;
+    box-shadow: 0 0 10px #0F0;
     transition: width 0.3s ease;
-    box-shadow: 0 0 20px #0F0;
   }
   
   &:hover {
-    text-shadow: 0 0 25px rgba(0, 255, 0, 1),
-                 0 0 35px rgba(0, 255, 0, 0.8),
-                 0 0 45px rgba(0, 255, 0, 0.6),
-                 0 0 55px rgba(0, 255, 0, 0.4);
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.8),
+                 0 0 30px rgba(0, 255, 0, 0.6),
+                 0 0 40px rgba(0, 255, 0, 0.4);
   }
   
   &:hover::after {
     width: 100%;
   }
+
+  @media (max-width: 1200px) {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
 `;
 
-const DashboardLink = styled(NavLink)`
-  color: #40E0FF;
-  text-shadow: 0 0 20px rgba(64, 224, 255, 0.8),
-               0 0 30px rgba(64, 224, 255, 0.6),
-               0 0 40px rgba(64, 224, 255, 0.4),
-               0 0 50px rgba(64, 224, 255, 0.2);
-  letter-spacing: 1px;
+const PentestingLink = styled(NavLink)`
+  color: #FF0000;
+  text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
   
   &:after {
-    background-color: #40E0FF;
-    box-shadow: 0 0 20px #40E0FF;
+    background-color: #FF0000;
+    box-shadow: 0 0 10px #FF0000;
   }
   
   &:hover {
-    text-shadow: 0 0 25px rgba(64, 224, 255, 1),
-                 0 0 35px rgba(64, 224, 255, 0.8),
-                 0 0 45px rgba(64, 224, 255, 0.6),
-                 0 0 55px rgba(64, 224, 255, 0.4);
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.8),
+                 0 0 30px rgba(255, 0, 0, 0.6),
+                 0 0 40px rgba(255, 0, 0, 0.4);
   }
 `;
 
 const PremiumLink = styled(NavLink)`
   color: #FFD700;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
-               0 0 30px rgba(255, 215, 0, 0.6),
-               0 0 40px rgba(255, 215, 0, 0.4),
-               0 0 50px rgba(255, 215, 0, 0.2);
-  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
   
   &:after {
     background-color: #FFD700;
-    box-shadow: 0 0 20px #FFD700;
+    box-shadow: 0 0 10px #FFD700;
   }
   
   &:hover {
-    text-shadow: 0 0 25px rgba(255, 215, 0, 1),
-                 0 0 35px rgba(255, 215, 0, 0.8),
-                 0 0 45px rgba(255, 215, 0, 0.6),
-                 0 0 55px rgba(255, 215, 0, 0.4);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+                 0 0 30px rgba(255, 215, 0, 0.6),
+                 0 0 40px rgba(255, 215, 0, 0.4);
+  }
+`;
+
+const DashboardLink = styled(NavLink)`
+  color: #40E0FF;
+  text-shadow: 0 0 20px rgba(64, 224, 255, 0.8);
+  
+  &:after {
+    background-color: #40E0FF;
+    box-shadow: 0 0 10px #40E0FF;
+  }
+  
+  &:hover {
+    text-shadow: 0 0 20px rgba(64, 224, 255, 0.8),
+                 0 0 30px rgba(64, 224, 255, 0.6),
+                 0 0 40px rgba(64, 224, 255, 0.4);
   }
 `;
 
@@ -208,56 +222,53 @@ const LogoutButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
 
   &:hover {
     background: rgba(0, 255, 0, 0.1);
-    box-shadow: 0 0 10px #0F0;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1200px) {
     width: 100%;
+    margin-top: 0.5rem;
   }
 `;
 
-// Purple username text
 const UserName = styled.span`
   color: #9F00FF;
   font-family: 'Orbitron', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
-  text-shadow: 0 0 20px rgba(159, 0, 255, 0.8),
-               0 0 30px rgba(159, 0, 255, 0.6),
-               0 0 40px rgba(159, 0, 255, 0.4),
-               0 0 50px rgba(159, 0, 255, 0.2);
-  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(159, 0, 255, 0.8);
+  transition: all 0.3s ease;
   
   &:hover {
-    text-shadow: 0 0 25px rgba(159, 0, 255, 1),
-                 0 0 35px rgba(159, 0, 255, 0.8),
-                 0 0 45px rgba(159, 0, 255, 0.6),
-                 0 0 55px rgba(159, 0, 255, 0.4);
+    text-shadow: 0 0 20px rgba(159, 0, 255, 0.8),
+                 0 0 30px rgba(159, 0, 255, 0.6),
+                 0 0 40px rgba(159, 0, 255, 0.4);
+  }
+
+  @media (max-width: 1200px) {
+    margin: 0.5rem 0;
   }
 `;
 
-const PentestingLink = styled(NavLink)`
-  color: #FF0000;
-  text-shadow: 0 0 20px rgba(255, 0, 0, 0.8),
-               0 0 30px rgba(255, 0, 0, 0.6),
-               0 0 40px rgba(255, 0, 0, 0.4),
-               0 0 50px rgba(255, 0, 0, 0.2);
-  letter-spacing: 1px;
+const Overlay = styled.div<{ isOpen: boolean }>`
+  display: none;
   
-  &:after {
-    background-color: #FF0000;
-    box-shadow: 0 0 20px #FF0000;
-  }
-  
-  &:hover {
-    text-shadow: 0 0 25px rgba(255, 0, 0, 1),
-                 0 0 35px rgba(255, 0, 0, 0.8),
-                 0 0 45px rgba(255, 0, 0, 0.6),
-                 0 0 55px rgba(255, 0, 0, 0.4);
+  @media (max-width: 1200px) {
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
   }
 `;
 
@@ -265,6 +276,25 @@ const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1200) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMenuOpen]);
 
   const handleLogout = () => {
     logout();
@@ -313,25 +343,27 @@ const Header: React.FC = () => {
           </svg>
         </HamburgerButton>
 
+        <Overlay isOpen={isMenuOpen} onClick={closeMenu} />
+        
         <NavLinks isOpen={isMenuOpen}>
           <NavLink to="/tutorials" onClick={closeMenu}>Code Tutorials</NavLink>
           <PentestingLink to="/pentesting" onClick={closeMenu}>Pentesting</PentestingLink>
           <NavLink to="https://github.com/msdevsec" onClick={closeMenu}>Portfolio</NavLink>
           <PremiumLink to="/premium" onClick={closeMenu}>Premium Content</PremiumLink>
           {user ? (
-  <>
-    <DashboardLink to="/dashboard">
-      {user.role === 'ADMIN' ? 'Admin Dashboard' : 'Dashboard'}
-    </DashboardLink>
-    <UserName>Hi, {user.username}</UserName>
-    <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-  </>
-) : (
-  <>
-    <NavLink to="/login">Sign In</NavLink>
-    <NavLink to="/register">Sign Up</NavLink>
-  </>
-)}
+            <>
+              <DashboardLink to="/dashboard" onClick={closeMenu}>
+                {user.role === 'ADMIN' ? 'Admin Dashboard' : 'Dashboard'}
+              </DashboardLink>
+              <UserName>Hi, {user.username}</UserName>
+              <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+            </>
+          ) : (
+            <>
+              <NavLink to="/login" onClick={closeMenu}>Sign In</NavLink>
+              <NavLink to="/register" onClick={closeMenu}>Sign Up</NavLink>
+            </>
+          )}
         </NavLinks>
       </Nav>
     </HeaderContainer>
