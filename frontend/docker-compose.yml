@@ -12,5 +12,5 @@ services:
       - ./.env:/app/.env
     environment:
       VITE_API_URL: http://localhost:4000
-      VITE_TINYMCE_API_KEY: pvpqc2dpj92h65n7folvk7p44vwksu7f8l1sg7r1ujv87pfg
+      VITE_TINYMCE_API_KEY: ${VITE_TINYMCE_API_KEY}
       WATCHPACK_POLLING: "true"
