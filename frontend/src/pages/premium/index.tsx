@@ -228,8 +228,8 @@ const PremiumPage: React.FC = () => {
             <FeatureItem isPremium>Access to premium penetration testing guides</FeatureItem>
             <FeatureItem isPremium>Early access to new content</FeatureItem>
             <FeatureItem isPremium>Access to private GitHub repositories</FeatureItem>
-            <FeatureItem isPremium>Advanced interactive features</FeatureItem>
-            <FeatureItem isPremium>Advanced integration guides</FeatureItem>
+            <FeatureItem isPremium>Password recovery system</FeatureItem>
+            <FeatureItem isPremium>Premium integration guides</FeatureItem>
             <FeatureItem isPremium>Deployment & DevOps guides</FeatureItem>
             <FeatureItem isPremium>Complete source code & assets</FeatureItem>
             <FeatureItem isPremium>Priority support channel</FeatureItem>

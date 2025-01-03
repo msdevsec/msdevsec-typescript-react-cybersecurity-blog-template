@@ -203,8 +203,8 @@ export const Login = () => {
                 Sign In
               </SubmitButton>
 
-              <ForgotPassword to="/forgot-password">
-                Forgot your password?
+              <ForgotPassword to="/premium">
+                Forgot your password? (Premium Feature)
               </ForgotPassword>
             </form>
           </>
