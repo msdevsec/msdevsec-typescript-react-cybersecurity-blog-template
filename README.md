@@ -152,7 +152,8 @@ The premium version includes all features from the free version plus:
 Visit [www.msdevsec.com](https://www.msdevsec.com) to see the blog platform in action with all premium features enabled.
 
 ### 💼 Get the Commercial Version
-For pricing, customization options, and access to the complete commercial source code with all premium features, contact us at https://msdevsec.com/contact or [admin@msdevsec.com](mailto:admin@msdevsec.com).
+For pricing, customization options, and access to the complete commercial source code with all premium features, contact us at https://msdevsec.com/contact or [admin@msdevsec.com](mailto:admin@msdevsec.com). </br>  
+
 
 ## 📚 API Documentation
 
