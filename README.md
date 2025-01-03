@@ -3,6 +3,10 @@
 ## 🚀 Free Version (Open Source)
 A modern, secure blog platform template built with TypeScript, React, and Node.js. Features a robust backend with role-based access control, secure admin management, and a clean API design. Includes Docker containerization for easy development and deployment.
 
+
+### 🎮 Try it Live
+Visit [www.msdevsec.com](https://www.msdevsec.com) to see the blog platform in action with all premium features enabled.
+  
 🎥 **Watch Demo:**
 Coming soon... (Premium version showcase)
 
@@ -335,7 +339,7 @@ curl -X POST http://localhost:4000/api/posts/admin \
 ## 🌟 Live Demo & Commercial Version
 
 ### 💼 Get the Commercial Version
-For pricing, customization options, and access to the complete commercial source code with all premium features, contact us at https://msdevsec.com/contact or [admin@msdevsec.com](mailto:admin@msdevsec.com). </br>
+For pricing, customization options, and access to the complete commercial source code with all premium features, contact us at (https://msdevsec.com) or [admin@msdevsec.com](mailto:admin@msdevsec.com). </br>
 
 
 ## 🌐 Community Resources
